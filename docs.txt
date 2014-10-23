@@ -250,8 +250,8 @@
 
 2)Classes:
 
--NVector (updated)
--Matrix (updated)
+-NVector
+-Matrix
 -Graph (updated)
 
 -------------------------------------------------------------------------------------
@@ -290,8 +290,9 @@
 *Not exactly good in terms of performance due to memory constraints
 
 *Methods are:
->GetNeighbors (updated)
->Special Constructor used by Graph (updated)
+>GetNeighbors
+>GetSides
+>Special Constructor used by Graph
 >Default ones
 
 2.2.1)GetNeighbors
@@ -299,12 +300,16 @@
 *Returns an array of a node's neighbors, which MUST BE DELETED after parsing
 *If there are weights, will return an array of tuples
 
-2.2.2)Special Constructor
+2.2.2)GetSides
+
+*Returns an array of tuples containing neighbors and weights for sides
+
+2.2.3)Special Constructor
 
 *Reads a file and loads it as a graph
 *A boolean switch indicates the presence of weights
 *This same boolean switch is present under class Graph
-*If said switch is false, matrix will be boolean, otherwise double
+*Matrix is always numerical, should weights be off then all weights are 1
 
 -------------------------------------------------------------------------------------
 

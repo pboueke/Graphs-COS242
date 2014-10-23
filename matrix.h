@@ -5,6 +5,7 @@
 
 #define intptr int*
 
+#include "graph.h"
 #include <string>
 
 using namespace std;
@@ -16,14 +17,15 @@ class Matrix{
      *its lineXcolumn, which can be done in O(1), but returning a list of neighbors is, in the worst case, O(n)
      */
     int order; //Order of Matrix
-    bool* elements; //Vector for storing each line, each with an array for columns
+    double** elements; //Vector for storing each line, each with an array for columns
 
 public:
     bool d; //Destroy neighbors signal
     Matrix(); //Default constructor
-    Matrix(const string fname, intptr &n_degree, int &n, int &m, int &d_max); //Graph<Matrix> Constructor call
+    Matrix(const string fname, intptr &n_degree, int &n, int &m, int &d_max, bool w); //Graph<Matrix> Constructor call
     ~Matrix(); //Default destructor
     int* GetNeighbors(const int index, const int degree); //Get Neighbors for vertice 'index'
+    Tuple<int,double>* GetSides(int index, int degree); //Get sides incident on node
 };
 
 #endif // MATRIX_H

@@ -716,7 +716,7 @@ int Graph<T>::GetDiameter(){
 
 
 template class Graph<NVector>;
-//template class Graph<Matrix>;
+template class Graph<Matrix>;
 template class Ordered_LinkedList<int>;
 template class Degen_DoubleLinkedList<int>;
 template class Tuple<int,double>;

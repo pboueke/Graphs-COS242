@@ -16,19 +16,24 @@ Matrix::Matrix(){
     elements = NULL; //Null pointer because of above
 }
 
-Matrix::Matrix(const string fname, intptr &n_degree, int &n, int &m, int &d_max){
+Matrix::Matrix(const string fname, intptr &n_degree, int &n, int &m, int &d_max, bool w){
     //Constructor of Matrix for conjunct usage with Graph class
     //Receives as const argument the filename to read from, which is enough to start Matrix
     //Receives as reference arguments the graph's information, such as n, m, max degree and array of degrees
     //This way, we can initialize both the Graph and the data structure without repeating loops
     d = true;
     int tmp,tmpn,count; //Temporary calc variables
+    double tmpw;
     ifstream q;
     q.open(fname.c_str());
     q >> order; //First line is always equal to a graph's n value
     n = order;
     n_degree = new int[order](); //Allocs memory for Graph's vertex degree array
-    elements = new bool[order*order](); //Allocs memory for Matrix's array
+    elements = new double*[order];
+    for (int i = 0; i < order; i++){
+        cout << "HERE" << i << endl;
+        elements[i] = new double[order];
+    }
     count = 0;
     while (true){
         //We limit the loop count to size*size because it will always be bigger than a graph's m value
@@ -38,15 +43,16 @@ Matrix::Matrix(const string fname, intptr &n_degree, int &n, int &m, int &d_max)
         //This breaks out of the loop as there are no more sides to be read
         //It is done after a single read because you must actually read the eof character
         q >> tmpn; //Side's vertex B
-        //cout << tmp << " " << tmpn << endl;
         if (tmp == tmpn) continue;
-        if (elements[(tmp-1)*order + (tmpn-1)]) continue;
+        if (elements[tmp-1][tmpn-1]) continue;
+        if (w) {
+            q >> tmpw;
+            elements[tmp-1][tmpn-1] = tmpw; //Sets data for side AB in matrix
+            elements[tmpn-1][tmp-1] = tmpw; //Sets data for side BA in matrix
+        }
         n_degree[tmp-1]+=1; //Increase vertex A's degree (Remember vertex indexing starts at 1)
         n_degree[tmpn-1]+=1; //Increase vertex B's degree        
-        elements[(tmp-1)*order + (tmpn-1)] = true; //Sets data for side AB in matrix
-        elements[(tmpn-1)*order + (tmp-1)] = true; //Sets data for side BA in matrix
         count++; //Iterates side count
-
     }
     q.close();
     //Computes max degree
@@ -59,7 +65,12 @@ Matrix::Matrix(const string fname, intptr &n_degree, int &n, int &m, int &d_max)
 }
 
 Matrix::~Matrix(){
-    if (!elements) delete [] elements;
+    if (!elements) {
+        for (int i = 0; i < order; ++i){
+            delete [] elements[i];
+        }
+        delete [] elements;
+    }
 }
 
 int* Matrix::GetNeighbors(const int index, const int degree){
@@ -68,12 +79,27 @@ int* Matrix::GetNeighbors(const int index, const int degree){
     int count = 0; //Neighbors found ; Iterator
     int it = 0;
     while (count < degree){
-        //Stops when all enighbors are found, worst case is O(n)
-        if (elements[(order*(index-1)) + it]){
+        //Stops when all neighbors are found, worst case is O(n)
+        if (elements[index-1][it]){
             aux[count] = it+1; //Adds side to list of neighbors, remember indexing starts at 1
             count++;
         }
         it++;
     }
     return aux;
+}
+
+Tuple<int,double>* Matrix::GetSides(int index, int degree){
+    Tuple<int,double>* sides = new Tuple<int,double>[degree];
+    int count = 0;
+    int it = 0;
+    while (count < degree){
+        //Stops when all neighbors are found, worst case is O(n)
+        if (elements[index-1][it]){
+            sides[count] = Tuple<int,double>(it+1,elements[index-1][it]);
+            count++;
+        }
+        it++;
+    }
+    return sides;
 }
