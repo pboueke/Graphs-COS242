@@ -1,6 +1,7 @@
 //NVECTOR CPP
 
 #include "nvector.h"
+#include "graph.h"
 #include <iostream>
 #include <fstream>
 

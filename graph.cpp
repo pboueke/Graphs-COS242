@@ -11,17 +11,31 @@
 
 using namespace std;
 
+//-------------------------------------------------------------------------------------
+
+template <class T, class U>
+Tuple<T,U>::Tuple(T t, U u){
+    a = t;
+    b = u;
+}
+
+//-------------------------------------------------------------------------------------
+
 template <class T>
 Element<T>::Element(T n_index){
     index = n_index;
     next = NULL; //Can't set beforehand
 }
 
+//-------------------------------------------------------------------------------------
+
 template <class T>
 DoubleElement<T>::DoubleElement(T n_index){
     index = n_index;
     next = prev = NULL; //Can't set beforehand
 }
+
+//-------------------------------------------------------------------------------------
 
 template <class T>
 Queue<T>::Queue(){
@@ -62,6 +76,8 @@ T Queue<T>::Remove(){
     return ind;
 }
 
+//-------------------------------------------------------------------------------------
+
 template <class T>
 Stack<T>::Stack(){
     empty = true; //Stack starts empty
@@ -101,106 +117,75 @@ T Stack<T>::Remove(){
     return ind;
 }
 
-template <class T>
-DoubleLinkedList<T>::DoubleLinkedList(){
-    size = max_size = 0;
-    first = last = NULL;
-    pointers = NULL;
-}
-
-template <class T>
-void DoubleLinkedList<T>::SetSize(const int n_size){
-    //Fills list with n_size elements, not exactly generic enough
-    max_size = n_size;
-    pointers = new DoubleElement<T>*[n_size];
-    for (int i = 0; i < n_size; ++i){
-        Add(i+1);
-    }
-}
-
-template <class T>
-DoubleLinkedList<T>::~DoubleLinkedList(){
-    //Empties list and frees memory
-    while (size){
-        Remove(first->index);
-    }
-    for (int i = 0; i < max_size; ++i){
-        delete pointers[i];
-    }
-    delete [] pointers;
-}
-
-template <class T>
-void DoubleLinkedList<T>::Add(T index){
-    //Adds new element to list, updates pointers
-    DoubleElement<T>* e = new DoubleElement<T>(index);
-    pointers[index-1] = e;
-    if (!size){
-        first = e;
-        last = e;
-    }
-    else{
-        last->next = e;
-        e->prev = last;
-        last = e;
-    }
-    ++size;
-}
-
-template <class T>
-void DoubleLinkedList<T>::Remove(int index){
-    //Removes element from list, updates pointers
-    if (pointers[index-1]!=last) pointers[index-1]->next->prev = pointers[index-1]->prev;
-    else last = pointers[index-1]->prev;
-    if (pointers[index-1]!=first) pointers[index-1]->prev->next = pointers[index-1]->next;
-    else first = pointers[index-1]->next;
-    pointers[index-1] = NULL;
-    --size;
-}
-
-ConnectedComponent::ConnectedComponent(){
-    size = it = 0;
-    nodes = NULL;
-}
-
-ConnectedComponent::ConnectedComponent(int n_size){
-    //Sets connected component to a fixed size
-    size = n_size;
-    it = 0;
-    nodes = new int[n_size];
-}
-
-ConnectedComponent::~ConnectedComponent(){
-    //delete [] nodes;
-}
-
-bool ConnectedComponent::operator >(ConnectedComponent &other){
-    return size > other.size;
-}
-
-void ConnectedComponent::Add(int index){
-    //Fills nodes array
-    nodes[it] = index;
-    ++it;
-}
-
+//-------------------------------------------------------------------------------------
 
 template <class T>
 LinkedList<T>::LinkedList(){
+    size = 0;
+    first = NULL;
+}
+
+template <class T>
+LinkedList<T>::~LinkedList(){
+    while (!size){
+        Remove_Head();
+    }
+}
+
+template <class T>
+void LinkedList<T>::Add_Head(T index){
+    Element<T>* e = new Element<T>(index);
+    if (size) e->next = first;
+    first = e;
+    size++;
+}
+
+template <class T>
+T LinkedList<T>::Remove_Head(){
+    //Removes first element of list
+    Element<T>* aux = first;
+    T ind = first->index;
+    first = first->next;
+    delete aux;
+    --size;
+    return ind;
+}
+
+template <class T>
+bool LinkedList<T>::Remove(T index){
+    //Removes specific element
+    Element<T>* prev = NULL;
+    for (Element<T>* it = first; it != NULL; it = it->next){
+        if (it->index == index){
+            if (prev) prev->next = it->next;
+            else first = it->next;
+            delete it;
+            --size;
+            return true;
+        }
+        prev = it;
+    }
+    return false;
+}
+
+//-------------------------------------------------------------------------------------
+
+template <class T>
+Ordered_LinkedList<T>::Ordered_LinkedList(){
     size = 0;
     first = last = NULL;
 }
 
 template <class T>
-LinkedList<T>::~LinkedList(){
+Ordered_LinkedList<T>::~Ordered_LinkedList(){
     //Empties list
     while (!size){
-        Remove();
+        Remove_Head();
     }
 }
 
 template <class T>
-void LinkedList<T>::Add(T index){
+void Ordered_LinkedList<T>::Add(T index){
     //Adds new element to list, keeping the order it was in
     Element<T>* e = new Element<T>(index);
     if (!size){
@@ -229,7 +214,7 @@ void LinkedList<T>::Add(T index){
 }
 
 template <class T>
-T LinkedList<T>::Remove(){
+T Ordered_LinkedList<T>::Remove_Head(){
     //Removes first element of list
     Element<T>* aux = first;
     T ind = first->index;
@@ -238,6 +223,185 @@ T LinkedList<T>::Remove(){
     --size;
     return ind;
 }
+
+template <class T>
+bool Ordered_LinkedList<T>::Remove(T index){
+    //Removes specific element
+    Element<T>* prev = NULL;
+    for (Element<T>* it = first; it != NULL; it = it->next){
+        if (it->index == index){
+            if (prev) prev->next = it->next;
+            else first = it->next;
+            delete it;
+            --size;
+            return true;
+        }
+        prev = it;
+    }
+    return false;
+}
+
+//-------------------------------------------------------------------------------------
+
+template <class T>
+DoubleLinkedList<T>::DoubleLinkedList(){
+    size = 0;
+    first = last = NULL;
+}
+
+template <class T>
+DoubleLinkedList<T>::~DoubleLinkedList(){
+    while (!size){
+        Remove_Head();
+    }
+}
+
+template <class T>
+void DoubleLinkedList<T>::Add_Head(T index){
+    DoubleElement<T>* e = new DoubleElement<T>(index);
+    if (size) {e->next = first; first->prev = e;}
+    else last = e;
+    first = e;
+    size++;
+}
+
+template <class T>
+void DoubleLinkedList<T>::Add_Tail(T index){
+    DoubleElement<T>* e = new DoubleElement<T>(index);
+    if (size) {e->prev = last; last->next = e;}
+    else first = e;
+    last = e;
+    size++;
+}
+
+template <class T>
+T DoubleLinkedList<T>::Remove_Head(){
+    DoubleElement<T>* aux = first;
+    T ind = first->index;
+    first->next->prev = NULL;
+    first = first->next;
+    delete aux;
+    --size;
+    return ind;
+}
+
+template <class T>
+T DoubleLinkedList<T>::Remove_Tail(){
+    DoubleElement<T>* aux = last;
+    T ind = last->index;
+    last->prev->next = NULL;
+    last = last->prev;
+    delete aux;
+    --size;
+    return ind;
+}
+
+template <class T>
+bool DoubleLinkedList<T>::Remove(T index){
+    if (first->index == index) {Remove_Head(); return true;}
+    else if (last->index == index) {Remove_Tail(); return true;}
+    else {
+        for (DoubleElement<T>* it = first->next; it != last; it = it->next){
+            if (it->index == index){
+                it->prev->next = it->next;
+                it->next->prev = it->prev;
+                delete it;
+                --size;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+//-------------------------------------------------------------------------------------
+
+template <class T>
+Degen_DoubleLinkedList<T>::Degen_DoubleLinkedList(){
+    size = max_size = 0;
+    first = last = NULL;
+    pointers = NULL;
+}
+
+template <class T>
+Degen_DoubleLinkedList<T>::~Degen_DoubleLinkedList(){
+    //Empties list and frees memory
+    while (size){
+        Remove(first->index);
+    }
+    for (int i = 0; i < max_size; ++i){
+        delete pointers[i];
+    }
+    delete [] pointers;
+}
+
+template <class T>
+void Degen_DoubleLinkedList<T>::Fill(const int n_size){
+    //Fills list with n_size elements, not exactly generic enough
+    max_size = n_size;
+    pointers = new DoubleElement<T>*[n_size];
+    for (int i = 0; i < n_size; ++i){
+        Add(i+1);
+    }
+}
+
+template <class T>
+void Degen_DoubleLinkedList<T>::Add(T index){
+    //Adds new element to list, updates pointers
+    DoubleElement<T>* e = new DoubleElement<T>(index);
+    pointers[index-1] = e;
+    if (!size){
+        first = e;
+        last = e;
+    }
+    else{
+        last->next = e;
+        e->prev = last;
+        last = e;
+    }
+    ++size;
+}
+
+template <class T>
+void Degen_DoubleLinkedList<T>::Remove(int index){
+    //Removes element from list, updates pointers
+    if (pointers[index-1]!=last) pointers[index-1]->next->prev = pointers[index-1]->prev;
+    else last = pointers[index-1]->prev;
+    if (pointers[index-1]!=first) pointers[index-1]->prev->next = pointers[index-1]->next;
+    else first = pointers[index-1]->next;
+    pointers[index-1] = NULL;
+    --size;
+}
+
+//-------------------------------------------------------------------------------------
+
+ConnectedComponent::ConnectedComponent(){
+    size = it = 0;
+    nodes = NULL;
+}
+
+ConnectedComponent::ConnectedComponent(int n_size){
+    //Sets connected component to a fixed size
+    size = n_size;
+    it = 0;
+    nodes = new int[n_size];
+}
+
+ConnectedComponent::~ConnectedComponent(){
+    //delete [] nodes;
+}
+
+bool ConnectedComponent::operator >(ConnectedComponent &other){
+    return size > other.size;
+}
+
+void ConnectedComponent::Add(int index){
+    //Fills nodes array
+    nodes[it] = index;
+    ++it;
+}
+
+//-------------------------------------------------------------------------------------
 
 template<class T>
 Graph<T>::Graph(){
@@ -310,7 +474,7 @@ int* Graph<T>::GetNeighbors(const int index){
 }
 
 template<class T>
-ConnectedComponent* Graph<T>::BFS(const int index, bool* &mark, DoubleLinkedList<int>* ll){
+ConnectedComponent* Graph<T>::BFS(const int index, bool* &mark, Degen_DoubleLinkedList<int>* ll){
     bool m = false;
     if (!mark) {mark = new bool[n]; m = true;}
     int* parent = new int[n];
@@ -367,7 +531,7 @@ ConnectedComponent* Graph<T>::BFS(const int index, bool* &mark, DoubleLinkedList
 }
 
 template <class T>
-ConnectedComponent* Graph<T>::FastBFS(const int index, DoubleLinkedList<int>* ll){
+ConnectedComponent* Graph<T>::FastBFS(const int index, Degen_DoubleLinkedList<int>* ll){
     bool* mark = new bool[n];
     for (int i = 0; i < n; ++i){
         mark[i] = false;
@@ -507,9 +671,9 @@ void Graph<T>::VeryFastDFS(const int index){
 
 template<class T>
 void Graph<T>::GetConnectedComponents(){
-    LinkedList<ConnectedComponent>* ll = new LinkedList<ConnectedComponent>;
-    DoubleLinkedList<int>* dll = new DoubleLinkedList<int>;
-    dll->SetSize(n);
+    Ordered_LinkedList<ConnectedComponent>* ll = new Ordered_LinkedList<ConnectedComponent>;
+    Degen_DoubleLinkedList<int>* dll = new Degen_DoubleLinkedList<int>;
+    dll->Fill(n);
     int aux = n;
     ConnectedComponent* ccptr;
     while (aux > 0){
@@ -524,7 +688,7 @@ void Graph<T>::GetConnectedComponents(){
     o.open(path.c_str());
     ConnectedComponent cc;
     while (ll->size){
-        cc = ll->Remove();
+        cc = ll->Remove_Head();
         o << "CONNECTED COMPONENT OF SIZE " << cc.size << "\n";
         for (int i = 0; i < cc.size; ++i){
             o << cc.nodes[i] << "\n";
@@ -549,6 +713,6 @@ int Graph<T>::GetDiameter(){
 
 template class Graph<NVector>;
 template class Graph<Matrix>;
-template class LinkedList<int>;
-template class DoubleLinkedList<int>;
+template class Ordered_LinkedList<int>;
+template class Degen_DoubleLinkedList<int>;
 //http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor

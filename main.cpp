@@ -15,8 +15,8 @@ using namespace std;
 
 int main(){
     /*(Un)comment the lines you (don't) wish to test!! (Vector)*/
-    //Graph<NVector> gv; //Instantiates a graph with a vector
-    //gv.LoadGraphFromFile(FNAME); //Loads graph from path
+    Graph<NVector> gv; //Instantiates a graph with a vector
+    gv.LoadGraphFromFile(FNAME); //Loads graph from path
     //gv.GenerateGraphFile(); //Generates output file
     //int degree_v = gv.GetNodeDegree(INDEX); //Gets degree of specific node
     //int* neighbors_v = gv.GetNeighbors(INDEX); //Gets list of neighbors for a node
@@ -29,9 +29,9 @@ int main(){
     //delete [] mark_v;
     //Runs a BFS on a specific node: [End]
     //gv.DFS(INDEX); //Runs a DFS on a specific node
-    //gv.GetConnectedComponents(); //Prints all connected components to a file
+    gv.GetConnectedComponents(); //Prints all connected components to a file
     //int diameter_v = gv.GetDiameter(); //Gets diameter
-    //cout << "DONE" << endl;
+    cout << "DONE" << endl;
 
     /*(Un)comment the lines you (don't) wish to test!! (Matrix)*/
     //Graph<Matrix> gm; //Instantiates a graph with a vector

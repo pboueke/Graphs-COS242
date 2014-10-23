@@ -1,6 +1,7 @@
 //MATRIX CPP
 
 #include "matrix.h"
+#include "graph.h"
 #include <fstream>
 #include <iostream>
 

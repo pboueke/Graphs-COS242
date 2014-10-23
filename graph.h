@@ -8,6 +8,13 @@
 #define intptr int*
 #include <string>
 
+template <class T,class U>
+struct Tuple{
+    T a;
+    U b;
+    Tuple(T t, U u);
+};
+
 template <class T>
 struct Element{
     //Element of a linked list, used in queue and stack data structures
@@ -53,7 +60,48 @@ struct Stack{
 };
 
 template <class T>
+struct LinkedList{
+    int size;
+    Element<T>* first;
+
+    LinkedList();
+    ~LinkedList();
+    void Add_Head(T index);
+    T Remove_Head();
+    bool Remove(T index);
+};
+
+template <class T>
+struct Ordered_LinkedList{
+    //Data structure representing an ordered linked list
+    int size; //List's size
+    Element<T>* first; //Pointer to first element
+    Element<T>* last; //Pointer to last element
+
+    Ordered_LinkedList(); //Default constructor
+    ~Ordered_LinkedList(); //Default destructor
+    void Add(T index); //Adds element to list
+    T Remove_Head(); //Removes first element from list
+    bool Remove(T index); //Removes specific element from list
+};
+
+template <class T>
 struct DoubleLinkedList{
+    int size;
+    DoubleElement<T>* first; //Pointer to first element
+    DoubleElement<T>* last; //Pointer to last element
+
+    DoubleLinkedList(); //Default constructor
+    ~DoubleLinkedList(); //Default destructor
+    void Add_Head(T index);
+    void Add_Tail(T index);
+    T Remove_Head();
+    T Remove_Tail();
+    bool Remove(T index);
+};
+
+template <class T>
+struct Degen_DoubleLinkedList{
     //Data structure implementing a double linked list
     int size; //List's size
     int max_size; //List's maximum size
@@ -62,11 +110,14 @@ struct DoubleLinkedList{
     DoubleElement<T>** pointers; //Pointer array for each element
     //This allows access to a specific element in O(1)
 
-    DoubleLinkedList(); //Default constructor
-    void SetSize(const int n_size); //Fills list with n_size elements
-    ~DoubleLinkedList(); //Default destructor
-    void Add(T index); //Adds element to list
+    Degen_DoubleLinkedList(); //Default constructor
+    ~Degen_DoubleLinkedList(); //Default destructor
+    void Fill(const int n_size); //Fills list with n_size elements
+    void Remove_First(); //Removes first element of list
     void Remove(int index); //Removes element from list
+
+private:
+    void Add(T index); //Adds element to list
 };
 
 struct ConnectedComponent{
@@ -83,20 +134,6 @@ struct ConnectedComponent{
 };
 
 template <class T>
-class LinkedList{
-    //Data structure representing an ordered linked list
-public:
-    int size; //List's size
-    Element<T>* first; //Pointer to first element
-    Element<T>* last; //Pointer to last element
-
-    LinkedList(); //Default constructor
-    ~LinkedList(); //Default destructor
-    void Add(T index); //Adds element to list
-    T Remove(); //Removes first element from list
-};
-
-template <class T>
 class Graph{
     //Represents a generic graph, with auxiliar data structure T, set by the user
 
@@ -108,7 +145,7 @@ class Graph{
     int* degree_dist; //Degree distribution, degree_dist[0] contains no. of vertices with degree 0
     int* n_degree; //Array for storing each node's degree
     T* t; //Data structure for storing vertices and edges
-    ConnectedComponent* FastBFS(const int index, DoubleLinkedList<int>* ll); //Private BFS for ConnectedComponents algorithm
+    ConnectedComponent* FastBFS(const int index, Degen_DoubleLinkedList<int>* ll); //Private BFS for ConnectedComponents algorithm
     int VeryFastBFS(const int index); //Private BFS for Diameter algorithm
     void VeryFastDFS(const int index); //Private DFS for reasons
 
@@ -131,7 +168,7 @@ public:
     int* GetNeighbors(const int index);
     //Returns a list of neighbors for vertex with index 'index'
 
-    ConnectedComponent* BFS(const int index, bool* &mark = NULL, DoubleLinkedList<int>* ll = NULL);
+    ConnectedComponent* BFS(const int index, bool* &mark = NULL, Degen_DoubleLinkedList<int>* ll = NULL);
     //Runs a BFS on the graph from starting node with index 'index', given mark vector
     //Writes a file with the spanning tree for the BFS
     //Returns an array with each node's respective parent
