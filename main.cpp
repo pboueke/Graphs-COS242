@@ -16,7 +16,7 @@ using namespace std;
 int main(){
     /*(Un)comment the lines you (don't) wish to test!! (Vector)*/
     Graph<NVector> gv; //Instantiates a graph with a vector
-    gv.LoadGraphFromFile(FNAME); //Loads graph from path
+    gv.LoadGraphFromFile(FNAME,false); //Loads graph from path
     //gv.GenerateGraphFile(); //Generates output file
     //int degree_v = gv.GetNodeDegree(INDEX); //Gets degree of specific node
     //int* neighbors_v = gv.GetNeighbors(INDEX); //Gets list of neighbors for a node

@@ -3,15 +3,16 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include "nvector.h"
-#include "matrix.h"
 #define intptr int*
 #include <string>
+
+using namespace std;
 
 template <class T,class U>
 struct Tuple{
     T a;
     U b;
+    Tuple();
     Tuple(T t, U u);
 };
 
@@ -137,6 +138,7 @@ template <class T>
 class Graph{
     //Represents a generic graph, with auxiliar data structure T, set by the user
 
+    bool w; //Switch for weighted graph
     int m; //Number of edges
     int n; //Number of nodes
     double d; //Average node degree
@@ -154,7 +156,7 @@ public:
 
     ~Graph(); //Default destructor
 
-    bool LoadGraphFromFile(const string path);
+    bool LoadGraphFromFile(const string path, bool weight);
     //Loads graph from text file into a Vector or Matrix; Computes n, m and d
     //Fills n_degree with each node's degree
     //Returns 1 if success, 0 otherwise

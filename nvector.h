@@ -3,6 +3,7 @@
 #ifndef NVECTOR_H
 #define NVECTOR_H
 
+#include "graph.h"
 #include <string>
 
 #define intptr int*
@@ -19,14 +20,15 @@ class NVector{
      *its list of neighbors, which can be either O(n) if not ordered, and O(logn) if ordered.
      */
     int size; //Stores how many elements are inside the list
-    int** neighbors; //Stores each vertex's neighbors
+    Tuple<int,double>** neighbors; //Stores each vertex's neighbors
 
 public:
     bool d; //Destroy neighbors signal
     NVector(); //Default constructor
-    NVector(string fname, intptr &n_degree, int &n, int &m, int &d_max); //Graph<Vector> Constructor call
+    NVector(string fname, intptr &n_degree, int &n, int &m, int &d_max, bool w); //Graph<Vector> Constructor call
     ~NVector(); //Default destructor
     int* GetNeighbors(const int index, const int degree); //Get Neighbors for vertice 'index'
+    Tuple<int,double>* GetSides(int index, int degree);
 };
 
 #endif //NVECTOR_H

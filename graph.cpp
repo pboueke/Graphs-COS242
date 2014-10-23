@@ -14,6 +14,9 @@ using namespace std;
 //-------------------------------------------------------------------------------------
 
 template <class T, class U>
+Tuple<T,U>::Tuple() {}
+
+template <class T, class U>
 Tuple<T,U>::Tuple(T t, U u){
     a = t;
     b = u;
@@ -421,12 +424,13 @@ Graph<T>::~Graph(){
 }
 
 template<class T>
-bool Graph<T>::LoadGraphFromFile(const string path){
+bool Graph<T>::LoadGraphFromFile(const string path, bool weight){
     //Loads Graph from specified path, must call graph constructor from class T
     //If either class T isn't compatible or file is inxistent, returns false
     int sum = 0; //Used for computing average node degree
+    w = weight; //Stores whether graph has weights or not
     fname = path; //Saves path used for this graph
-    t = new T(path,n_degree,n,m,d_max);
+    t = new T(path,n_degree,n,m,d_max,w);
     degree_dist = new int[d_max+1](); //Allocs d_max+1 because a node can have degree zero
     for (int i = 0; i < n; ++i){
         //Fills degree_dist and readies sum for d computing
@@ -712,7 +716,8 @@ int Graph<T>::GetDiameter(){
 
 
 template class Graph<NVector>;
-template class Graph<Matrix>;
+//template class Graph<Matrix>;
 template class Ordered_LinkedList<int>;
 template class Degen_DoubleLinkedList<int>;
+template class Tuple<int,double>;
 //http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor

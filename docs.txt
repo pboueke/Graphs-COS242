@@ -262,16 +262,21 @@
 *Similar to an adjacency list, only it uses memory contiguously
 
 *Methods are:
->GetNeighbors (updated)
->Special Constructor used by Graph (updated)
+>GetNeighbors
+>GetSides
+>Special Constructor used by Graph
 >Default ones
 
 2.1.1)GetNeighbors
 
 *Returns a pointer to a node's neighbors list, which MUST NOT BE DELETED
-*If there are weights, will return an array of tuples
+*If there are weights, will return an array of neighbors only
 
-2.1.2)Special Constructor
+2.1.2)GetSides
+
+*Returns a tuple with neighbors and weights
+
+2.1.3)Special Constructor
 
 *Reads a file and loads it as a graph
 *A boolean switch indicates the presence of weights
