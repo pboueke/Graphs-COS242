@@ -5,6 +5,7 @@
 -Tuple
 -Element
 -DoubleElement
+-HeapElement
 -Queue
 -Stack
 -Linked List
@@ -38,9 +39,16 @@
 
 -------------------------------------------------------------------------------------
 
-1.3)Double Element
+1.3)DoubleElement
 
 *Same as Element, but for double linked lists
+
+-------------------------------------------------------------------------------------
+
+1.4)HeapElement
+
+*Same as Element, but for heaps
+*Keeps pointer to parent and two children
 
 -------------------------------------------------------------------------------------
 
@@ -330,9 +338,10 @@
 
 *Methods are:
 >Default constructor and destructor
->LoadGraphFromFile (updated)
+>LoadGraphFromFile
 >GenerateGraphFile (updated)
->GetNeighbors (updated)
+>GetNeighbors
+>GetSides (new)
 >BFS
 >FastBFS (private)
 >VeryFastBFS (private)
@@ -360,78 +369,82 @@
 2.3.3)GetNeighbors
 
 *Returns an array containing a node's neighbors
-*If there are weights, array type is Tuple<int,double>
-*Else, array type is int
+*Array type is always int
 
-2.3.4)BFS
+2.3.4)GetSides
+
+*Returns an array containing a node's sides, including neighbors and weights
+*Array type is a tuple of int, double
+
+2.3.5)BFS
 
 *Runs a BFS from a specfied node
 *Prints spanning tree on file
 *Returns the connected component
 
-2.3.5)FastBFS (private)
+2.3.6)FastBFS (private)
 
 *Runs a BFS from a specified node
 *Does not print spanning tree
 *Returns the connected component
 *Used only inside GetConnectedComponents, which is why it's private
 
-2.3.6)VeryFastBFS (private)
+2.3.7)VeryFastBFS (private)
 
 *Runs a BFS from a specified node
 *Does not print the spanning tree
 *Returns the highest distance found
 *Used only inside GetDiameter, which is why it's private
 
-2.3.7)DFS
+2.3.8)DFS
 
 *Runs a DFS from a specified node
 *Prints spanning tree on file
 *Returns void
 
-2.3.8)VeryFastDFS (private)
+2.3.9)VeryFastDFS (private)
 
 *Runs a DFS from a specfied node
 *Does not print spanning tree
 *Not used within class code, used only for performance testing
 
-2.3.9)GetConnectedComponents
+2.3.10)GetConnectedComponents
 
 *Runs several FastBFS until all vertices have been visited
 *Uses an ordered linked list to store components
 *Prints components in decreasing order to file
 
-2.3.10)GetDiameter
+2.3.11)GetDiameter
 
 *Runs a VeryFastBFS for each node
 *Compares return to current max value
 *Returns max value
 
-2.3.11)Dijkstra
+2.3.12)Dijkstra
 
 *Runs Dijkstra's algorithm from a specified node
 *Prints spanning tree and shorter paths to files
 *Returns array with shorter paths to each node
 
-2.3.12)Dijkstra(dst)
+2.3.13)Dijkstra(dst)
 
 *Runs Djikstra's algorithm from a specified node
 *Stops when distance to destination is found
 *Returns shortest path from source to destination
 
-2.3.13)VeryFastDijkstra (private)
+2.3.14)VeryFastDijkstra (private)
 
 *Runs Dijkstra's algorithm from a specified node
 *Does not write anything to file
 *Returns array with shorter distances to each node
 
-2.3.14)MST
+2.3.15)MST
 
 *Runs Prim's algorithm to find a MST
 *Prints the MST to file
 *Returns void
 
-2.3.15)GetAverageDistance
+2.3.16)GetAverageDistance
 
 *If graph is weightless, calls GetDiameter
 *Else, runs VeryFastDijkstra for every node

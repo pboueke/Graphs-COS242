@@ -36,6 +36,18 @@ struct DoubleElement{
 };
 
 template <class T>
+struct HeapElement{
+    //Element for a binary heap
+    T index;
+    int level;
+    HeapElement<T>* parent;
+    HeapElement<T>* left;
+    HeapElement<T>* right;
+
+    HeapElement(T n_index, int n_level);
+};
+
+template <class T>
 struct Queue{
     //Data structure implementing a queue of Elements
     bool empty; //Stores if queue is empty
@@ -120,6 +132,50 @@ struct Degen_DoubleLinkedList{
 private:
     void Add(T index); //Adds element to list
 };
+
+/*template <class T>
+struct MinHeap{
+    //Priority queue for elements with smaller keys
+    HeapElement<T>* top; //Top of heap
+    HeapElement<T>* last_in; //Last element inserted
+    bool direction; //Stores next element to the left or right of last_in
+    LinkedList<HeapElement<T>>* elements;
+
+    MinHeap();
+    ~MinHeap();
+    void Add(T index);
+    T Remove();
+    bool Edit(T old, T value);
+};*/
+
+template <class T>
+struct Degen_MinHeap{
+    //Priority queue for elements with smaller keys with fixed size
+    int size;
+    HeapElement<T>* top; //Top of Heap
+    HeapElement<T>** elements;
+
+    Degen_MinHeap(int n_size);
+    ~Degen_MinHeap();
+    void Add(T index);
+    T Remove();
+    void Edit(T index, T value);
+};
+
+/*template <class T>
+struct MaxHeap{
+    //Priority queue for elements with bigger keys
+    HeapElement<T>* top; //Top of heap
+    HeapElement<T>* last_in; //Last element inserted
+    bool direction; //Stores next element to the left or right of last_in
+    LinkedList<HeapElement<T>>* elements;
+
+    MaxHeap();
+    ~MaxHeap();
+    void Add(T index);
+    T Remove();
+    bool Edit(T old, T value);
+};*/
 
 struct ConnectedComponent{
     //Data structure for storing a graph's connected component
