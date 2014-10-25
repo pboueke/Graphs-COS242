@@ -10,10 +10,11 @@ using namespace std;
 
 template <class T,class U>
 struct Tuple{
-    T a;
-    U b;
-    Tuple();
-    Tuple(T t, U u);
+    //Generic container for two indetermined types
+    T a; //Element of class T
+    U b; //Element of class U
+    Tuple(); //Default constructor
+    Tuple(T t, U u); //Declare+Define constructor
 };
 
 template <class T>
@@ -38,13 +39,12 @@ struct DoubleElement{
 template <class T>
 struct HeapElement{
     //Element for a binary heap
-    T index;
-    int level;
-    HeapElement<T>* parent;
-    HeapElement<T>* left;
-    HeapElement<T>* right;
+    T index; //Element's key
+    HeapElement<T>* parent; //Pointer to parent, root has NULL
+    HeapElement<T>* left; //Pointer to left child, may be NULL
+    HeapElement<T>* right; //Pointer to right child, may be NULL
 
-    HeapElement(T n_index, int n_level);
+    HeapElement(T n_index); //Constructor
 };
 
 template <class T>
@@ -133,21 +133,6 @@ private:
     void Add(T index); //Adds element to list
 };
 
-/*template <class T>
-struct MinHeap{
-    //Priority queue for elements with smaller keys
-    HeapElement<T>* top; //Top of heap
-    HeapElement<T>* last_in; //Last element inserted
-    bool direction; //Stores next element to the left or right of last_in
-    LinkedList<HeapElement<T>>* elements;
-
-    MinHeap();
-    ~MinHeap();
-    void Add(T index);
-    T Remove();
-    bool Edit(T old, T value);
-};*/
-
 template <class T>
 struct Degen_MinHeap{
     //Priority queue for elements with smaller keys with fixed size
@@ -162,20 +147,19 @@ struct Degen_MinHeap{
     void Edit(T index, T value);
 };
 
-/*template <class T>
-struct MaxHeap{
-    //Priority queue for elements with bigger keys
-    HeapElement<T>* top; //Top of heap
-    HeapElement<T>* last_in; //Last element inserted
-    bool direction; //Stores next element to the left or right of last_in
-    LinkedList<HeapElement<T>>* elements;
+template <class T>
+struct Degen_MaxHeap{
+    //Priority queue for elements with smaller keys with fixed size
+    int size;
+    HeapElement<T>* top; //Top of Heap
+    HeapElement<T>** elements;
 
-    MaxHeap();
-    ~MaxHeap();
+    Degen_MaxHeap(int n_size);
+    ~Degen_MaxHeap();
     void Add(T index);
     T Remove();
-    bool Edit(T old, T value);
-};*/
+    void Edit(T index, T value);
+};
 
 struct ConnectedComponent{
     //Data structure for storing a graph's connected component

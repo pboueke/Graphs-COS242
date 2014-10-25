@@ -12,9 +12,7 @@
 -Ordered Linked List
 -Double Linked List
 -Degenerate Double Linked List with Vector
--MinHeap (new)
 -Degenerate MinHeap (new)
--MaxHeap (new)
 -Degenerate MaxHeap (new)
 -ConnectedComponent
 
@@ -52,96 +50,96 @@
 
 -------------------------------------------------------------------------------------
 
-1.4)Queue
+1.5)Queue
 
 *Data structure for algorithms, template on container
 *Methods are: Add, Remove + Default ones
 *Keeps pointer to head and tail
 
-1.4.1)Add
+1.5.1)Add
 
 *Creates new element, puts it as new tail
 *Returns void
 
-1.4.2)Remove
+1.5.2)Remove
 
 *Removes head, puts it as head's pointer
 *Returns removed element
 
 -------------------------------------------------------------------------------------
 
-1.5)Stack
+1.6)Stack
 
 *Data structure for algorithms, template on container
 *Methods are: Add, Remove + Default ones
 *Keeps pointer to top of stack
 
-1.5.1)Add
+1.6.1)Add
 
 *Creates new element, puts it as new top
 *Returns void
 
-1.5.2)Remove
+1.6.2)Remove
 
 *Removes top, puts it as top's pointer
 *Returns removed element
 
 -------------------------------------------------------------------------------------
 
-1.6)Linked List
+1.7)Linked List
 
 *Simple linked list, stores data dynamically
 *Methods are: Add_Head, Add_Tail, Remove_Head, Remove_Tail, Remove(index) + Default ones
 *Keeps pointer to head, and keeps count of elements
 
-1.6.1)Add_Head
+1.7.1)Add_Head
 
 *Adds new element to beginning of list
 
-1.6.2)Add_Tail
+1.7.2)Add_Tail
 
 *Adds new element to end of list
 
-1.6.3)Remove_Head
+1.7.3)Remove_Head
 
 *Removes list's first element
 *Returns removed element
 
-1.6.4)Remove(index)
+1.7.4)Remove(index)
 
 *Searches list for specific element
 *Returns false if element not in list, true otherwise
 
 -------------------------------------------------------------------------------------
 
-1.7)Ordered Linked List
+1.8)Ordered Linked List
 
 *Keeps elements ordered, otherwise same as linked list
 *Methods are: Add, Remove_Head, Remove_Tail, Remove(index) + Default ones
 *Keeps pointer to head, tail and keeps count of elements
 
-1.7.1)Add
+1.8.1)Add
 
 *Parses the list, looking for where to insert new element, and keeps it there.
 
-1.7.2)Remove_Head
+1.8.2)Remove_Head
 
 *Same as linked list
 
-1.7.3)Remove(index)
+1.8.3)Remove(index)
 
 *Same as linked list
 
 -------------------------------------------------------------------------------------
 
-1.8)Double Linked List
+1.9)Double Linked List
 
 *Same as linked list, except elements keep pointers to before and after
 *Has method remove tail, should be intuitive
 
 -------------------------------------------------------------------------------------
 
-1.9)Degenerate Double Linked List with Vector
+1.10)Degenerate Double Linked List with Vector
 
 *Special type of double linked list used on specific situations
 *List is initially filled with a fixed number of elements
@@ -152,45 +150,20 @@
 *Methods are: Fill(size), Remove_First, Remove(index) + Default ones
 *Keeps track of first and last elements via special pointers
 
-1.9.1)Fill(size)
+1.10.1)Fill(size)
 
 *Fills list with size elements
 *Requires operator ++ for custom classes
 
-1.9.2)Remove_First
+1.10.2)Remove_First
 
 *Removes first element from list
 *Returns said element
 
-1.9.3)Remove(index)
+1.10.3)Remove(index)
 
 *Removes specific element from list
 *Reminder that this is O(1) because we can access it via vector
-
--------------------------------------------------------------------------------------
-
-1.10)MinHeap
-
-*Priority queue for elements with smaller keys
-*Requires operator < for custom classes
-*Operations Add and Remove are O(log2n)
-*Operation Edit is O(nlog2n) because parsing of a linked list is required
-*Stores pointers to each element in a linked list, as elements are created dynamically
-*Methods are: Add, Remove, Edit(index)
-
-1.10.1)Add
-
-*Adds a new element to the heap, maintaining heap order
-
-1.10.2)Remove
-
-*Removes heap root, maintaining heap order
-
-1.10.3)Edit(index)
-
-*Edits element with specified index to a new value
-*Requires parsing of a linked list
-*Maintains heap order
 
 -------------------------------------------------------------------------------------
 
@@ -220,37 +193,30 @@
 
 -------------------------------------------------------------------------------------
 
-1.12)MaxHeap
+1.12)Degenerate MaxHeap
 
-*Same as MinHeap, only for elements with bigger keys
+*Same as Degenerate MinHeap, only for elements with bigger keys
 *Operator > is required for custom classes
 
 -------------------------------------------------------------------------------------
 
-1.13)Degenerate MaxHeap
-
-*Same as Degenerate MaxHeap, only for elements with bigger keys
-*Operator > is required for custom classes
-
--------------------------------------------------------------------------------------
-
-1.14)Connected Component
+1.13)Connected Component
 
 *Data structure to represent a graph's connected component
 *Contains a vector with each node's index
 *Size must be specified beforehand for array allocation
 *Methods are: Add, Operator > + Special constructor + Default ones
 
-1.14.1)Add
+1.13.1)Add
 
 *Adds a node's index to a connected component.
 *Uses an iterator to correctly fill the array.
 
-1.14.2)Operator >
+1.13.2)Operator >
 
 *Returns true if this component has more nodes than other, else returns false
 
-1.14.3)Special Constructor
+1.13.3)Special Constructor
 
 *Size is specified for array allocation
 

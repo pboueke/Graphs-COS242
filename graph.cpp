@@ -43,9 +43,8 @@ DoubleElement<T>::DoubleElement(T n_index){
 //-------------------------------------------------------------------------------------
 
 template <class T>
-HeapElement<T>::HeapElement(T n_index, int n_level){
+HeapElement<T>::HeapElement(T n_index){
     index = n_index;
-    level = n_level;
     parent = left = right = NULL;
 }
 
@@ -399,16 +398,23 @@ Degen_MinHeap<T>::Degen_MinHeap(int n_size){
 }
 
 template <class T>
+Degen_MinHeap<T>::~Degen_MinHeap(){
+    while (size){
+        Remove();
+    }
+    delete elements;
+}
+
+template <class T>
 void Degen_MinHeap<T>::Add(T index){
+    HeapElement<T>* e = new HeapElement<T>(index);
     if (!size){
-        elements[0] = new HeapElement<T>(index, 0);
+        top = e;
+        elements[0] = e;
         size++;
     }
     else{
-        HeapElement<T>* e;
         int parent = ((size-1)/2); //Parent of a new node: (size-1)/2
-        int level = elements[parent]->level + 1;
-        e = new HeapElement<T>(index,level);
         e->parent = elements[parent];
         elements[size] = e;
         if (elements[parent]->left) elements[parent]->right = e;
@@ -416,15 +422,16 @@ void Degen_MinHeap<T>::Add(T index){
         while (index < e->parent->index){
             HeapElement<T>* aux;
             HeapElement<T>* dad = elements[parent];
+            if (dad == top) top = e;
+            if (dad->parent && dad->parent->left == dad) dad->parent->left = e;
+            else if (dad->parent) dad->parent->right = e;
+            e->parent = dad->parent;
+            dad->parent = e;
             if (dad->left == e){
                 //e is to the left of parent
                 dad->right->parent = e;
                 e->right->parent = dad;
                 e->left->parent = dad;
-                if (dad->parent->left == dad) dad->parent->left = e;
-                else dad->parent->right = e;
-                e->parent = dad->parent;
-                dad->parent = e;
                 aux = e->right;
                 e->right = dad->right;
                 dad->right = aux;
@@ -436,10 +443,6 @@ void Degen_MinHeap<T>::Add(T index){
                 dad->left->parent = e;
                 e->left->parent = dad;
                 e->right->parent = dad;
-                if (dad->parent->left == dad) dad->parent->left = e;
-                else dad->parent->right = e;
-                e->parent = dad->parent;
-                dad->parent = e;
                 aux = e->left;
                 e->left = dad->left;
                 dad->left = aux;
@@ -447,6 +450,75 @@ void Degen_MinHeap<T>::Add(T index){
                 e->right = dad;
             }
         }
+        size++;
+    }
+}
+
+//-------------------------------------------------------------------------------------
+
+template <class T>
+Degen_MaxHeap<T>::Degen_MaxHeap(int n_size){
+    size = 0;
+    elements = new HeapElement<T>*[n_size];
+    for (int i = 0; i < size; ++i){
+        Add(INFINITY);
+    }
+}
+
+template <class T>
+Degen_MaxHeap<T>::~Degen_MaxHeap(){
+    while (size){
+        Remove();
+    }
+    delete elements;
+}
+
+template <class T>
+void Degen_MaxHeap<T>::Add(T index){
+    HeapElement<T>* e = new HeapElement<T>(index);
+    if (!size){
+        top = e;
+        elements[0] = e;
+        size++;
+    }
+    else{
+        int parent = ((size-1)/2); //Parent of a new node: (size-1)/2
+        e->parent = elements[parent];
+        elements[size] = e;
+        if (elements[parent]->left) elements[parent]->right = e;
+        else elements[parent]->left = e;
+        while (index > e->parent->index){
+            HeapElement<T>* aux;
+            HeapElement<T>* dad = elements[parent];
+            if (dad == top) top = e;
+            if (dad->parent && dad->parent->left == dad) dad->parent->left = e;
+            else if (dad->parent) dad->parent->right = e;
+            e->parent = dad->parent;
+            dad->parent = e;
+            if (dad->left == e){
+                //e is to the left of parent
+                dad->right->parent = e;
+                e->right->parent = dad;
+                e->left->parent = dad;
+                aux = e->right;
+                e->right = dad->right;
+                dad->right = aux;
+                dad->left = e->left;
+                e->left = dad;
+            }
+            else {
+                //e is to the right of parent
+                dad->left->parent = e;
+                e->left->parent = dad;
+                e->right->parent = dad;
+                aux = e->left;
+                e->left = dad->left;
+                dad->left = aux;
+                dad->right = e->right;
+                e->right = dad;
+            }
+        }
+        size++;
     }
 }
 
