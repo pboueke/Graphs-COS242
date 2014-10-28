@@ -40,6 +40,7 @@ template <class T>
 struct HeapElement{
     //Element for a binary heap
     T index; //Element's key
+    int pos;
     HeapElement<T>* parent; //Pointer to parent, root has NULL
     HeapElement<T>* left; //Pointer to left child, may be NULL
     HeapElement<T>* right; //Pointer to right child, may be NULL
@@ -139,12 +140,13 @@ struct Degen_MinHeap{
     int size;
     HeapElement<T>* top; //Top of Heap
     HeapElement<T>** elements;
+    HeapElement<T>** heap_elements;
 
     Degen_MinHeap(int n_size);
     ~Degen_MinHeap();
     void Add(T index);
     T Remove();
-    void Edit(T index, T value);
+    void Edit(int index, T value);
 };
 
 template <class T>

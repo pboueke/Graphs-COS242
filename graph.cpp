@@ -44,6 +44,7 @@ DoubleElement<T>::DoubleElement(T n_index){
 
 template <class T>
 HeapElement<T>::HeapElement(T n_index){
+    pos = -1;
     index = n_index;
     parent = left = right = NULL;
 }
@@ -392,6 +393,7 @@ template <class T>
 Degen_MinHeap<T>::Degen_MinHeap(int n_size){
     size = 0;
     elements = new HeapElement<T>*[n_size];
+    heap_elements = new HeapElement<T>*[n_size];
     for (int i = 0; i < size; ++i){
         Add(INFINITY);
     }
@@ -403,6 +405,7 @@ Degen_MinHeap<T>::~Degen_MinHeap(){
         Remove();
     }
     delete elements;
+    delete heap_elements;
 }
 
 template <class T>
@@ -411,22 +414,33 @@ void Degen_MinHeap<T>::Add(T index){
     if (!size){
         top = e;
         elements[0] = e;
+        heap_elements[0] = e;
+        e->pos = 0;
         size++;
     }
     else{
         int parent = ((size-1)/2); //Parent of a new node: (size-1)/2
-        e->parent = elements[parent];
+        e->parent = heap_elements[parent];
         elements[size] = e;
-        if (elements[parent]->left) elements[parent]->right = e;
-        else elements[parent]->left = e;
+        heap_elements[size] = e;
+        e->pos = size;
+        if (heap_elements[parent]->left) heap_elements[parent]->right = e;
+        else heap_elements[parent]->left = e;
+        HeapElement<T>* aux;
+        HeapElement<T>* dad;
+        int npos;
         while (index < e->parent->index){
-            HeapElement<T>* aux;
-            HeapElement<T>* dad = elements[parent];
+            dad = e->parent;
             if (dad == top) top = e;
             if (dad->parent && dad->parent->left == dad) dad->parent->left = e;
             else if (dad->parent) dad->parent->right = e;
             e->parent = dad->parent;
             dad->parent = e;
+            heap_elements[e->pos] = dad;
+            heap_elements[dad->pos] = e;
+            npos = e->pos;
+            e->pos = dad->pos;
+            dad->pos = npos;
             if (dad->left == e){
                 //e is to the left of parent
                 dad->right->parent = e;
@@ -451,6 +465,121 @@ void Degen_MinHeap<T>::Add(T index){
             }
         }
         size++;
+    }
+}
+
+template <class T>
+T Degen_MinHeap<T>::Remove(){
+    --size;
+    T ret = heap_elements[0]->index;
+    HeapElement<T>* old_top = heap_elements[0];
+    heap_elements[0] = heap_elements[size];
+    heap_elements[size] = NULL;
+    HeapElement<T>* new_top = heap_elements[0];
+    new_top->pos = 0;
+    top = new_top;
+    if (new_top->parent->left == new_top) new_top->parent->left = NULL;
+    else new_top->parent->right = NULL;
+    new_top->parent = NULL;
+    new_top->left = old_top->left;
+    new_top->right = old_top->right;
+    delete old_top;
+    T index = new_top->index;
+    HeapElement<T>* child;
+    HeapElement<T>* aux;
+    int npos;
+    while (index > new_top->left->index || index > new_top->right->index){
+        if (new_top->left->index < new_top->right->index){
+            //switch to the left
+            child = new_top->left;
+            if (top == new_top) top = child;
+            if (new_top->parent && new_top->parent->left == new_top) new_top->parent->left = child;
+            else if (new_top->parent) new_top->parent->right = child;
+            child->parent = new_top->parent;
+            new_top->parent = child;
+            heap_elements[child->pos] = new_top;
+            heap_elements[new_top->pos] = child;
+            npos = child->pos;
+            child->pos = new_top->pos;
+            new_top->pos = npos;
+            new_top->right->parent = child;
+            child->right->parent = new_top;
+            child->left->parent = new_top;
+            aux = child->right;
+            child->right = new_top->right;
+            new_top->right = aux;
+            new_top->left = child->left;
+            child->left = new_top;
+        }
+        else{
+            //switch to the right
+            child = new_top->right;
+            if (top == new_top) top = child;
+            if (new_top->parent && new_top->parent->left == new_top) new_top->parent->left = child;
+            else if (new_top->parent) new_top->parent->right = child;
+            child->parent = new_top->parent;
+            new_top->parent = child;
+            heap_elements[child->pos] = new_top;
+            heap_elements[new_top->pos] = child;
+            npos = child->pos;
+            child->pos = new_top->pos;
+            new_top->pos = npos;
+            new_top->left->parent = child;
+            child->left->parent = new_top;
+            child->right->parent = new_top;
+            aux = child->left;
+            child->left = new_top->left;
+            new_top->left = aux;
+            new_top->right = child->right;
+            child->right = new_top;
+        }
+    }
+    return ret;
+}
+
+template <class T>
+void Degen_MinHeap<T>::Edit(int index, T value){
+    int n_index = index-1;
+    int pos = elements[n_index]->pos;
+    elements[n_index]->index = value;
+    HeapElement<T>* e = heap_elements[pos];
+    HeapElement<T>* aux;
+    HeapElement<T>* dad;
+    int npos;
+    while (value < e->parent->index){
+        dad = e->parent;
+        if (dad == top) top = e;
+        if (dad->parent && dad->parent->left == dad) dad->parent->left = e;
+        else if (dad->parent) dad->parent->right = e;
+        e->parent = dad->parent;
+        dad->parent = e;
+        heap_elements[e->pos] = dad;
+        heap_elements[dad->pos] = e;
+        npos = e->pos;
+        e->pos = dad->pos;
+        dad->pos = npos;
+        if (dad->left == e){
+            //e is to the left of parent
+            dad->right->parent = e;
+            e->right->parent = dad;
+            e->left->parent = dad;
+            aux = e->right;
+            e->right = dad->right;
+            dad->right = aux;
+            dad->left = e->left;
+            e->left = dad;
+        }
+        else {
+            //e is to the right of parent
+            dad->left->parent = e;
+            e->left->parent = dad;
+            e->right->parent = dad;
+            aux = e->left;
+            e->left = dad->left;
+            dad->left = aux;
+            dad->right = e->right;
+            e->right = dad;
+        }
     }
 }
 
@@ -489,7 +618,7 @@ void Degen_MaxHeap<T>::Add(T index){
         else elements[parent]->left = e;
         while (index > e->parent->index){
             HeapElement<T>* aux;
-            HeapElement<T>* dad = elements[parent];
+            HeapElement<T>* dad = e->parent;
             if (dad == top) top = e;
             if (dad->parent && dad->parent->left == dad) dad->parent->left = e;
             else if (dad->parent) dad->parent->right = e;
