@@ -12,9 +12,10 @@
 -Ordered Linked List
 -Double Linked List
 -Degenerate Double Linked List with Vector
--Degenerate MinHeap (new)
+-Degenerate MinHeap
 -Degenerate MaxHeap (new)
 -ConnectedComponent
+-GraphPath (new)
 
 >FIBONACCI HEAP??
 
@@ -220,6 +221,28 @@
 
 *Size is specified for array allocation
 
+-------------------------------------------------------------------------------------
+
+1.14)Graph Path
+
+*Data structure to represent path between two nodes in a graph
+*Contains an integer to store distance, starts as infinity
+*Contains a linked list of nodes that make the path
+*Methods are: Add, Change, Operator < + default ones
+
+1.14.1)Add
+
+*Adds a node to the path, appends node to head of list
+*Increments path on side's weight
+
+1.14.2)Change
+
+*Changes a path to a specified one, iterates the entire path
+
+1.14.3)Operator <
+
+*Compares distance of two paths
+
 *************************************************************************************
 
 2)Classes:
@@ -305,9 +328,9 @@
 *Methods are:
 >Default constructor and destructor
 >LoadGraphFromFile
->GenerateGraphFile (updated)
+>GenerateGraphFile
 >GetNeighbors
->GetSides (new)
+>GetSides
 >BFS
 >FastBFS (private)
 >VeryFastBFS (private)

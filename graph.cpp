@@ -9,7 +9,7 @@
 #include <string>
 #include <sstream>
 
-#define INFINITY 1000000
+#define INFINITY 10000000
 
 using namespace std;
 
@@ -740,16 +740,21 @@ void Graph<T>::GenerateGraphFile(){
     o.close();
 }
 
-template<class T>
+template <class T>
 int Graph<T>::GetNodeDegree(const int index){
     //Returns a node's degree in O(1)
     return n_degree[index-1];
 }
 
-template<class T>
+template <class T>
 int* Graph<T>::GetNeighbors(const int index){
     //Returns a node's neighbor list, complexity varies between data types
     return t->GetNeighbors(index,n_degree[index-1]);
+}
+
+template <class T>
+Tuple<int,double>* Graph<T>::GetSides(int index){
+    return t->GetSides(index,n_degree[index-1]);
 }
 
 template<class T>

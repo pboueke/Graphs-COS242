@@ -212,6 +212,9 @@ public:
     int* GetNeighbors(const int index);
     //Returns a list of neighbors for vertex with index 'index'
 
+    Tuple<int,double>* GetSides(int index);
+    //Returns a list of sides for vertex with specified index
+
     ConnectedComponent* BFS(const int index, bool* &mark = NULL, Degen_DoubleLinkedList<int>* ll = NULL);
     //Runs a BFS on the graph from starting node with index 'index', given mark vector
     //Writes a file with the spanning tree for the BFS
