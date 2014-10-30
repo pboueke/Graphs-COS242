@@ -394,7 +394,7 @@ Degen_MinHeap<T>::Degen_MinHeap(int n_size){
     size = 0;
     elements = new HeapElement<T>*[n_size];
     heap_elements = new HeapElement<T>*[n_size];
-    for (int i = 0; i < size; ++i){
+    for (int i = 0; i < n_size; ++i){
         Add(INFINITY);
     }
 }
@@ -429,7 +429,7 @@ void Degen_MinHeap<T>::Add(T index){
         HeapElement<T>* aux;
         HeapElement<T>* dad;
         int npos;
-        while (index < e->parent->index){
+        while (e->parent && index < e->parent->index){
             dad = e->parent;
             if (dad == top) top = e;
             if (dad->parent && dad->parent->left == dad) dad->parent->left = e;
@@ -441,11 +441,11 @@ void Degen_MinHeap<T>::Add(T index){
             npos = e->pos;
             e->pos = dad->pos;
             dad->pos = npos;
+            if (e->right) e->right->parent = dad;
+            if (e->left) e->left->parent = dad;
             if (dad->left == e){
                 //e is to the left of parent
                 dad->right->parent = e;
-                e->right->parent = dad;
-                e->left->parent = dad;
                 aux = e->right;
                 e->right = dad->right;
                 dad->right = aux;
@@ -455,8 +455,6 @@ void Degen_MinHeap<T>::Add(T index){
             else {
                 //e is to the right of parent
                 dad->left->parent = e;
-                e->left->parent = dad;
-                e->right->parent = dad;
                 aux = e->left;
                 e->left = dad->left;
                 dad->left = aux;
@@ -472,6 +470,10 @@ template <class T>
 T Degen_MinHeap<T>::Remove(){
     --size;
     T ret = heap_elements[0]->index;
+    if (!size){
+        delete top;
+        return ret;
+    }
     HeapElement<T>* old_top = heap_elements[0];
     heap_elements[0] = heap_elements[size];
     heap_elements[size] = NULL;
@@ -488,9 +490,13 @@ T Degen_MinHeap<T>::Remove(){
     HeapElement<T>* child;
     HeapElement<T>* aux;
     int npos;
-    while (index > new_top->left->index || index > new_top->right->index){
-        if (new_top->left->index < new_top->right->index){
+    while (new_top->left){
+        if (index > new_top->left->index && (!new_top->right || new_top->left->index < new_top->right->index)){
             //switch to the left
+            //mandatory condition (I): key for left is smaller than parent
+            //if there is no pointer to the right of parent (II): do it
+            //else, check if left is smaller than right (III), if true, do it
+            // I && (II || III), since II and III are mutually exclusive
             child = new_top->left;
             if (top == new_top) top = child;
             if (new_top->parent && new_top->parent->left == new_top) new_top->parent->left = child;
@@ -502,16 +508,19 @@ T Degen_MinHeap<T>::Remove(){
             npos = child->pos;
             child->pos = new_top->pos;
             new_top->pos = npos;
-            new_top->right->parent = child;
-            child->right->parent = new_top;
-            child->left->parent = new_top;
+            if (new_top->right) new_top->right->parent = child;
+            if (child->right) child->right->parent = new_top;
+            if (child->left) child->left->parent = new_top;
             aux = child->right;
             child->right = new_top->right;
             new_top->right = aux;
             new_top->left = child->left;
             child->left = new_top;
         }
-        else{
+        else if (new_top->right && new_top->right->index < index){
+            //if pointer exists and index is smaller than parent, switch
+            //if above is met, right < left was verified above, because if right exists, left must also exist
+            //also, if parent < left and right < parent, it follows that right < left
             //switch to the right
             child = new_top->right;
             if (top == new_top) top = child;
@@ -525,13 +534,17 @@ T Degen_MinHeap<T>::Remove(){
             child->pos = new_top->pos;
             new_top->pos = npos;
             new_top->left->parent = child;
-            child->left->parent = new_top;
-            child->right->parent = new_top;
+            if (child->left) child->left->parent = new_top;
+            if (child->right) child->right->parent = new_top;
             aux = child->left;
             child->left = new_top->left;
             new_top->left = aux;
             new_top->right = child->right;
             child->right = new_top;
+        }
+        else {
+            //heap order achieved
+            break;
         }
     }
     return ret;
@@ -546,7 +559,7 @@ void Degen_MinHeap<T>::Edit(int index, T value){
     HeapElement<T>* aux;
     HeapElement<T>* dad;
     int npos;
-    while (value < e->parent->index){
+    while (e->parent && value < e->parent->index){
         dad = e->parent;
         if (dad == top) top = e;
         if (dad->parent && dad->parent->left == dad) dad->parent->left = e;
@@ -558,11 +571,11 @@ void Degen_MinHeap<T>::Edit(int index, T value){
         npos = e->pos;
         e->pos = dad->pos;
         dad->pos = npos;
+        if (e->right) e->right->parent = dad;
+        if (e->left) e->left->parent = dad;
         if (dad->left == e){
             //e is to the left of parent
             dad->right->parent = e;
-            e->right->parent = dad;
-            e->left->parent = dad;
             aux = e->right;
             e->right = dad->right;
             dad->right = aux;
@@ -572,8 +585,6 @@ void Degen_MinHeap<T>::Edit(int index, T value){
         else {
             //e is to the right of parent
             dad->left->parent = e;
-            e->left->parent = dad;
-            e->right->parent = dad;
             aux = e->left;
             e->left = dad->left;
             dad->left = aux;
@@ -1000,4 +1011,5 @@ template class Graph<Matrix>;
 template class Ordered_LinkedList<int>;
 template class Degen_DoubleLinkedList<int>;
 template class Tuple<int,double>;
+template class Degen_MinHeap<int>;
 //http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor

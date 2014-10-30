@@ -8,13 +8,13 @@
 #include <sstream>
 
 #define INDEX 1
-#define FNAME "graphA.txt"
-#define SIZE 32385
+#define FNAME "graphZ.txt"
+#define SIZE 10
 
 using namespace std;
 
 int main(){
-    /*(Un)comment the lines you (don't) wish to test!! (Vector)*/
+    /*(Un)comment the lines you (don't) wish to test!! (Vector - No Weights)*/
     //Graph<NVector> gv; //Instantiates a graph with a vector
     //gv.LoadGraphFromFile(FNAME,false); //Loads graph from path
     //gv.GenerateGraphFile(); //Generates output file
@@ -33,7 +33,34 @@ int main(){
     //int diameter_v = gv.GetDiameter(); //Gets diameter
     //cout << "DONE" << endl;
 
-    /*(Un)comment the lines you (don't) wish to test!! (Matrix)*/
+    /*(Un)comment the lines you (don't) wish to test!! (Vector - Weights)*/
+    Graph <NVector> gvw;
+    gvw.LoadGraphFromFile(FNAME,true);
+    Degen_MinHeap<int> h(7);
+    cout << "1 = " << h.elements[0] << endl;
+    cout << "2 = " << h.elements[1] << endl;
+    cout << "3 = " << h.elements[2] << endl;
+    cout << "4 = " << h.elements[3] << endl;
+    cout << "5 = " << h.elements[4] << endl;
+    cout << "6 = " << h.elements[5] << endl;
+    cout << "7 = " << h.elements[6] << endl;
+    h.Edit(1,0);
+    h.Edit(2,1);
+    h.Edit(3,3);
+    h.Edit(4,7);
+    h.Edit(5,3);
+    h.Edit(6,5);
+    h.Edit(7,4);
+    cout << h.Remove() << endl;
+    cout << h.Remove() << endl;
+    cout << h.Remove() << endl;
+    cout << h.Remove() << endl;
+    cout << h.Remove() << endl;
+    cout << h.Remove() << endl;
+    cout << h.Remove() << endl;
+    cout << "DONE" << endl;
+
+    /*(Un)comment the lines you (don't) wish to test!! (Matrix - No Weights)*/
     //Graph<Matrix> gm; //Instantiates a graph with a vector
     //gm.LoadGraphFromFile(FNAME,false); //Loads graph from path
     //gm.GenerateGraphFile(); //Generates output file
