@@ -155,12 +155,13 @@ struct Degen_MaxHeap{
     int size;
     HeapElement<T>* top; //Top of Heap
     HeapElement<T>** elements;
+    HeapElement<T>** heap_elements;
 
     Degen_MaxHeap(int n_size);
     ~Degen_MaxHeap();
     void Add(T index);
     T Remove();
-    void Edit(T index, T value);
+    void Edit(int index, T value);
 };
 
 struct ConnectedComponent{
