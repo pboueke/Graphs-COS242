@@ -44,9 +44,9 @@ DoubleElement<T>::DoubleElement(T n_index){
 
 template <class T>
 HeapElement<T>::HeapElement(T n_index){
-    pos = -1;
+    pos = -1; //Error control
     index = n_index;
-    parent = left = right = NULL;
+    parent = left = right = NULL; //Can't set beforehand
 }
 
 //-------------------------------------------------------------------------------------
@@ -135,12 +135,14 @@ T Stack<T>::Remove(){
 
 template <class T>
 LinkedList<T>::LinkedList(){
+    //List starts empty
     size = 0;
     first = NULL;
 }
 
 template <class T>
 LinkedList<T>::~LinkedList(){
+    //Empties list
     while (size){
         Remove_Head();
     }
@@ -148,8 +150,9 @@ LinkedList<T>::~LinkedList(){
 
 template <class T>
 void LinkedList<T>::Add_Head(T index){
+    //Adds a new element to beginning of list
     Element<T>* e = new Element<T>(index);
-    if (size) e->next = first;
+    if (size) e->next = first; //Prevents crashing when list was empty
     first = e;
     size++;
 }
@@ -170,6 +173,8 @@ bool LinkedList<T>::Remove(T index){
     //Removes specific element
     Element<T>* prev = NULL;
     for (Element<T>* it = first; it != NULL; it = it->next){
+        //Iterates list in search of specific key
+        //In case of identical keys, removes first iteration
         if (it->index == index){
             if (prev) prev->next = it->next;
             else first = it->next;
@@ -186,6 +191,7 @@ bool LinkedList<T>::Remove(T index){
 
 template <class T>
 Ordered_LinkedList<T>::Ordered_LinkedList(){
+    //List starts empty
     size = 0;
     first = last = NULL;
 }
@@ -203,10 +209,12 @@ void Ordered_LinkedList<T>::Add(T index){
     //Adds new element to list, keeping the order it was in
     Element<T>* e = new Element<T>(index);
     if (!size){
+        //List was empty
         first = e;
         last = e;
     }
     else if (e->index > first->index){
+        //Element is new first
         e->next = first;
         first = e;
     }
@@ -217,13 +225,17 @@ void Ordered_LinkedList<T>::Add(T index){
             if (e->index > it->index){
                 it_p->next = e;
                 e->next = it;
-                break;
+                ++size;
+                return;
             }
             it_p = it;
         }
+        //Element is new last
+        //Will never reach this point otherwise, because of conditional return
         last->next = e;
         last = e;
     }
+    //Increments size for cases where there was no conditional return
     ++size;
 }
 
@@ -243,6 +255,8 @@ bool Ordered_LinkedList<T>::Remove(T index){
     //Removes specific element
     Element<T>* prev = NULL;
     for (Element<T>* it = first; it != NULL; it = it->next){
+        //Iterates list looking for a specific key
+        //If key has a duplicate, removes first iteration
         if (it->index == index){
             if (prev) prev->next = it->next;
             else first = it->next;
@@ -259,12 +273,14 @@ bool Ordered_LinkedList<T>::Remove(T index){
 
 template <class T>
 DoubleLinkedList<T>::DoubleLinkedList(){
+    //List starts empty
     size = 0;
     first = last = NULL;
 }
 
 template <class T>
 DoubleLinkedList<T>::~DoubleLinkedList(){
+    //Empties list
     while (size){
         Remove_Head();
     }
@@ -272,24 +288,31 @@ DoubleLinkedList<T>::~DoubleLinkedList(){
 
 template <class T>
 void DoubleLinkedList<T>::Add_Head(T index){
+    //Adds element to list's beginning
     DoubleElement<T>* e = new DoubleElement<T>(index);
+    //Check to see if list was empty
     if (size) {e->next = first; first->prev = e;}
     else last = e;
+    //If it was empty, new = first = last
     first = e;
     size++;
 }
 
 template <class T>
 void DoubleLinkedList<T>::Add_Tail(T index){
+    //Adds element to list's end
     DoubleElement<T>* e = new DoubleElement<T>(index);
+    //Check to see if list was empty
     if (size) {e->prev = last; last->next = e;}
     else first = e;
+    //If it was empty, new = first = last
     last = e;
     size++;
 }
 
 template <class T>
 T DoubleLinkedList<T>::Remove_Head(){
+    //Removes list's first element
     DoubleElement<T>* aux = first;
     T ind = first->index;
     first->next->prev = NULL;
@@ -301,6 +324,7 @@ T DoubleLinkedList<T>::Remove_Head(){
 
 template <class T>
 T DoubleLinkedList<T>::Remove_Tail(){
+    //Removes list's last element
     DoubleElement<T>* aux = last;
     T ind = last->index;
     last->prev->next = NULL;
@@ -312,10 +336,13 @@ T DoubleLinkedList<T>::Remove_Tail(){
 
 template <class T>
 bool DoubleLinkedList<T>::Remove(T index){
+    //Removes a specific element from list, returns false if not in list
     if (first->index == index) {Remove_Head(); return true;}
     else if (last->index == index) {Remove_Tail(); return true;}
     else {
         for (DoubleElement<T>* it = first->next; it != last; it = it->next){
+            //Iterates list looking for key
+            //In case of duplicate keys, removes first iteration
             if (it->index == index){
                 it->prev->next = it->next;
                 it->next->prev = it->prev;
@@ -332,6 +359,7 @@ bool DoubleLinkedList<T>::Remove(T index){
 
 template <class T>
 Degen_DoubleLinkedList<T>::Degen_DoubleLinkedList(){
+    //List starts empty
     size = max_size = 0;
     first = last = NULL;
     pointers = NULL;
@@ -391,6 +419,7 @@ void Degen_DoubleLinkedList<T>::Remove(int index){
 
 template <class T>
 Degen_MinHeap<T>::Degen_MinHeap(int n_size){
+    //Heap starts empty, gets filled with infinity
     size = 0;
     elements = new HeapElement<T>*[n_size];
     heap_elements = new HeapElement<T>*[n_size];
@@ -401,6 +430,7 @@ Degen_MinHeap<T>::Degen_MinHeap(int n_size){
 
 template <class T>
 Degen_MinHeap<T>::~Degen_MinHeap(){
+    //Empties heap and frees memory
     while (size){
         Remove();
     }
@@ -410,8 +440,10 @@ Degen_MinHeap<T>::~Degen_MinHeap(){
 
 template <class T>
 void Degen_MinHeap<T>::Add(T index){
+    //Creates new element
     HeapElement<T>* e = new HeapElement<T>(index);
     if (!size){
+        //Heap was empty
         top = e;
         elements[0] = e;
         heap_elements[0] = e;
@@ -420,27 +452,35 @@ void Degen_MinHeap<T>::Add(T index){
     }
     else{
         int parent = ((size-1)/2); //Parent of a new node: (size-1)/2
+        //Add element to heap
         e->parent = heap_elements[parent];
         elements[size] = e;
         heap_elements[size] = e;
         e->pos = size;
+        //Adjust parent-child pointers
+        //If left is NULL, so is right, and if left is not NULL, right is
         if (heap_elements[parent]->left) heap_elements[parent]->right = e;
         else heap_elements[parent]->left = e;
-        HeapElement<T>* aux;
-        HeapElement<T>* dad;
-        int npos;
+        HeapElement<T>* aux; //Auxiliar for transfering pointers
+        HeapElement<T>* dad; //Auxiliar for pointer operations
+        int npos; //Auxiliar for transfering positions
         while (e->parent && index < e->parent->index){
+            //While heap order is not achieved, switch e with its parent
             dad = e->parent;
             if (dad == top) top = e;
+            //Change parent and grandparent relations
+            //If parent is root, dad->parent is NULL, so the following should be skipped over
             if (dad->parent && dad->parent->left == dad) dad->parent->left = e;
             else if (dad->parent) dad->parent->right = e;
             e->parent = dad->parent;
             dad->parent = e;
+            //Switch positions
             heap_elements[e->pos] = dad;
             heap_elements[dad->pos] = e;
             npos = e->pos;
             e->pos = dad->pos;
             dad->pos = npos;
+            //Change child relations
             if (e->right) e->right->parent = dad;
             if (e->left) e->left->parent = dad;
             if (dad->left == e){
@@ -469,11 +509,14 @@ void Degen_MinHeap<T>::Add(T index){
 template <class T>
 T Degen_MinHeap<T>::Remove(){
     --size;
+    //Store what should be returned before deleting element
     T ret = heap_elements[0]->index;
     if (!size){
+        //Heap is now empty, delete and return
         delete top;
         return ret;
     }
+    //Shift last element to top of heap
     HeapElement<T>* old_top = heap_elements[0];
     heap_elements[0] = heap_elements[size];
     heap_elements[size] = NULL;
@@ -481,6 +524,7 @@ T Degen_MinHeap<T>::Remove(){
     new_top->pos = 0;
     top = new_top;
     //valgrind bug???
+    //Update child relations
     if (new_top->parent->left == new_top) new_top->parent->left = NULL;
     else new_top->parent->right = NULL;
     new_top->parent = NULL;
@@ -488,16 +532,20 @@ T Degen_MinHeap<T>::Remove(){
     new_top->right = old_top->right;
     delete old_top;
     T index = new_top->index;
-    HeapElement<T>* child;
-    HeapElement<T>* aux;
-    int npos;
+    HeapElement<T>* child; //Auxiliar for pointer operations
+    HeapElement<T>* aux; //Auxiliar for pointer transfers
+    int npos; //Auxiliar for position transfers
     while (new_top->left){
+        //All operations shift new top downwards only
+        //If left is NULL, so is right
+        //If left is NULL, you can't shift down anymore
         if (index > new_top->left->index && (!new_top->right || new_top->left->index < new_top->right->index)){
             //switch to the left
             //mandatory condition (I): key for left is smaller than parent
             //if there is no pointer to the right of parent (II): do it
             //else, check if left is smaller than right (III), if true, do it
             // I && (II || III), since II and III are mutually exclusive
+            //All operations are similar to those of Add, refer to that for details
             child = new_top->left;
             if (top == new_top) top = child;
             if (new_top->parent && new_top->parent->left == new_top) new_top->parent->left = child;
@@ -523,6 +571,7 @@ T Degen_MinHeap<T>::Remove(){
             //if above is met, right < left was verified above, because if right exists, left must also exist
             //also, if parent < left and right < parent, it follows that right < left
             //switch to the right
+            //All operations are similar to those of Add, refer to that for details
             child = new_top->right;
             if (top == new_top) top = child;
             if (new_top->parent && new_top->parent->left == new_top) new_top->parent->left = child;
@@ -553,10 +602,11 @@ T Degen_MinHeap<T>::Remove(){
 
 template <class T>
 void Degen_MinHeap<T>::Edit(int index, T value){
-    int n_index = index-1;
+    int n_index = index-1; //Adjust since indexing in graphs start with 1
     int pos = elements[n_index]->pos;
     elements[n_index]->index = value;
     HeapElement<T>* e = heap_elements[pos];
+    //Identical to heapify of Add, refer to that for details
     HeapElement<T>* aux;
     HeapElement<T>* dad;
     int npos;
@@ -599,6 +649,7 @@ void Degen_MinHeap<T>::Edit(int index, T value){
 
 template <class T>
 Degen_MaxHeap<T>::Degen_MaxHeap(int n_size){
+    //Heap starts empty, gets filled with infinity
     size = 0;
     elements = new HeapElement<T>*[n_size];
     heap_elements = new HeapElement<T>*[n_size];
@@ -609,6 +660,7 @@ Degen_MaxHeap<T>::Degen_MaxHeap(int n_size){
 
 template <class T>
 Degen_MaxHeap<T>::~Degen_MaxHeap(){
+    //Empties heap and frees memory
     while (size){
         Remove();
     }
@@ -618,6 +670,7 @@ Degen_MaxHeap<T>::~Degen_MaxHeap(){
 
 template <class T>
 void Degen_MaxHeap<T>::Add(T index){
+    //Refer to minheap for comments
     HeapElement<T>* e = new HeapElement<T>(index);
     if (!size){
         top = e;
@@ -676,6 +729,7 @@ void Degen_MaxHeap<T>::Add(T index){
 
 template <class T>
 T Degen_MaxHeap<T>::Remove(){
+    //Refer to minheap for comments
     --size;
     T ret = heap_elements[0]->index;
     if (!size){
@@ -761,6 +815,7 @@ T Degen_MaxHeap<T>::Remove(){
 
 template <class T>
 void Degen_MaxHeap<T>::Edit(int index, T value){
+    //Refer to minheap for comments
     int n_index = index-1;
     int pos = elements[n_index]->pos;
     elements[n_index]->index = value;
@@ -906,6 +961,7 @@ int* Graph<T>::GetNeighbors(const int index){
 
 template <class T>
 Tuple<int,double>* Graph<T>::GetSides(int index){
+    //Returns a node's sides list, complexity varies between data types
     return t->GetSides(index,n_degree[index-1]);
 }
 
@@ -1152,5 +1208,4 @@ template class Graph<Matrix>;
 template class Ordered_LinkedList<int>;
 template class Degen_DoubleLinkedList<int>;
 template class Tuple<int,double>;
-template class Degen_MinHeap<int>;
 //http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor

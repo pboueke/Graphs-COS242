@@ -75,14 +75,15 @@ struct Stack{
 
 template <class T>
 struct LinkedList{
-    int size;
-    Element<T>* first;
+    //Data structure representing a linked list
+    int size; //List's size
+    Element<T>* first; //Pointer to first element
 
-    LinkedList();
-    ~LinkedList();
-    void Add_Head(T index);
-    T Remove_Head();
-    bool Remove(T index);
+    LinkedList(); //Default constructor
+    ~LinkedList(); //Default destructor
+    void Add_Head(T index); //Adds element to list's head
+    T Remove_Head(); //Removes first element
+    bool Remove(T index); //Removes specific element, returns false if not in list
 };
 
 template <class T>
@@ -101,17 +102,18 @@ struct Ordered_LinkedList{
 
 template <class T>
 struct DoubleLinkedList{
-    int size;
+    //Data structure representing a double linked list
+    int size; //List's size
     DoubleElement<T>* first; //Pointer to first element
     DoubleElement<T>* last; //Pointer to last element
 
     DoubleLinkedList(); //Default constructor
     ~DoubleLinkedList(); //Default destructor
-    void Add_Head(T index);
-    void Add_Tail(T index);
-    T Remove_Head();
-    T Remove_Tail();
-    bool Remove(T index);
+    void Add_Head(T index); //Adds element to list's head
+    void Add_Tail(T index); //Adds element to list's tail
+    T Remove_Head(); //Removes first element
+    T Remove_Tail(); //Removes last element
+    bool Remove(T index); //Removes specific element, returns false if not in list
 };
 
 template <class T>
@@ -137,31 +139,31 @@ private:
 template <class T>
 struct Degen_MinHeap{
     //Priority queue for elements with smaller keys with fixed size
-    int size;
+    int size; //Heap's current size
     HeapElement<T>* top; //Top of Heap
-    HeapElement<T>** elements;
-    HeapElement<T>** heap_elements;
+    HeapElement<T>** elements; //Stores elements in indexed order
+    HeapElement<T>** heap_elements; //Stores elements in heap order
 
-    Degen_MinHeap(int n_size);
-    ~Degen_MinHeap();
-    void Add(T index);
-    T Remove();
-    void Edit(int index, T value);
+    Degen_MinHeap(int n_size); //Default constructor, requires a fixed max size
+    ~Degen_MinHeap(); //Default destructor
+    void Add(T index); //Adds element to heap, should only be called from constructor
+    T Remove(); //Removes top of heap
+    void Edit(int index, T value); //Changes a specific key
 };
 
 template <class T>
 struct Degen_MaxHeap{
-    //Priority queue for elements with smaller keys with fixed size
-    int size;
+    //Priority queue for elements with bigger keys with fixed size
+    int size; //Heap's current size
     HeapElement<T>* top; //Top of Heap
-    HeapElement<T>** elements;
-    HeapElement<T>** heap_elements;
+    HeapElement<T>** elements; //Stores elements in indexed order
+    HeapElement<T>** heap_elements; //Stores elements in heap order
 
-    Degen_MaxHeap(int n_size);
-    ~Degen_MaxHeap();
-    void Add(T index);
-    T Remove();
-    void Edit(int index, T value);
+    Degen_MaxHeap(int n_size); //Default constructor, requires a fixed max size
+    ~Degen_MaxHeap(); //Default destructor
+    void Add(T index); //Adds element to heap, should only be called from constructor
+    T Remove(); //Remvoes top of heap
+    void Edit(int index, T value); //Changes a specific key
 };
 
 struct ConnectedComponent{

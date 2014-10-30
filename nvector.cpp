@@ -19,10 +19,9 @@ NVector::NVector(string fname, intptr &n_degree, int &n, int &m, int &d_max, boo
     //Receives as const argument the filename to read from, which is enough to start NVector
     //Receives as reference arguments the graph's information, such as n, m, max degree and array of degrees
     //This way, we can initialize both the Graph and the data structure without repeating loops
-//TODO: Sort infile
-    d = false;
+    d = false; //Destroy list of sides returned by GetSides
     int tmp,tmpn,count; //Temporary calc variables
-    double tmpw;
+    double tmpw; //Temporaru calc variables
     ifstream p;
     p.open(fname.c_str());
     p >> size; //First line is always equal to a graph's n value
@@ -70,6 +69,7 @@ NVector::NVector(string fname, intptr &n_degree, int &n, int &m, int &d_max, boo
         }
         else{
             //Stores data in NVector, using aux[i] as an iterator
+            //Default weight is 1
             neighbors[tmp-1][aux[tmp-1]] = Tuple<int,double>(tmpn,1);
             neighbors[tmpn-1][aux[tmpn-1]] = Tuple<int,double>(tmp,1);
         }
@@ -90,8 +90,7 @@ NVector::~NVector(){
 }
 
 int* NVector::GetNeighbors(const int index, const int degree){
-    //This function returns in O(1) the list of neighbors for a given index
-    //Argument degree is unused, but is present for compatibility with Graph class
+    //This function returns in O(n) the list of neighbors for a given index
     int* n = new int[degree];
     for (int i = 0; i < degree; ++i){
         n[i] = neighbors[index-1][i].a;
@@ -100,5 +99,7 @@ int* NVector::GetNeighbors(const int index, const int degree){
 }
 
 Tuple<int,double>* NVector::GetSides(int index, int degree){
+    //Returns in O(1) a list of sides incident on a specific node
+    //Argument degree is there only for compatibility with class Graph
     return neighbors[index-1];
 }

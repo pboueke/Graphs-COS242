@@ -27,8 +27,8 @@ public:
     NVector(); //Default constructor
     NVector(string fname, intptr &n_degree, int &n, int &m, int &d_max, bool w); //Graph<Vector> Constructor call
     ~NVector(); //Default destructor
-    int* GetNeighbors(const int index, const int degree); //Get Neighbors for vertice 'index'
-    Tuple<int,double>* GetSides(int index, int degree);
+    int* GetNeighbors(const int index, const int degree); //Get Neighbors for a specific node
+    Tuple<int,double>* GetSides(int index, int degree); //Get Sides for a specific node
 };
 
 #endif //NVECTOR_H

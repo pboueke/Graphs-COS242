@@ -21,9 +21,9 @@ Matrix::Matrix(const string fname, intptr &n_degree, int &n, int &m, int &d_max,
     //Receives as const argument the filename to read from, which is enough to start Matrix
     //Receives as reference arguments the graph's information, such as n, m, max degree and array of degrees
     //This way, we can initialize both the Graph and the data structure without repeating loops
-    d = true;
+    d = true; //Destroy list of sides returned by GetSides
     int tmp,tmpn,count; //Temporary calc variables
-    double tmpw;
+    double tmpw; //Temporary calc variable
     ifstream q;
     q.open(fname.c_str());
     q >> order; //First line is always equal to a graph's n value
@@ -46,6 +46,7 @@ Matrix::Matrix(const string fname, intptr &n_degree, int &n, int &m, int &d_max,
         if (tmp == tmpn) continue;
         if (elements[tmp-1][tmpn-1]) continue;
         if (w) {
+            //The third read from file is only done if there are weights
             q >> tmpw;
             elements[tmp-1][tmpn-1] = tmpw; //Sets data for side AB in matrix
             elements[tmpn-1][tmp-1] = tmpw; //Sets data for side BA in matrix
@@ -91,7 +92,7 @@ int* Matrix::GetNeighbors(const int index, const int degree){
 
 Tuple<int,double>* Matrix::GetSides(int index, int degree){
     Tuple<int,double>* sides = new Tuple<int,double>[degree];
-    int count = 0;
+    int count = 0; //Neighbors found ; Iterator
     int it = 0;
     while (count < degree){
         //Stops when all neighbors are found, worst case is O(n)
