@@ -137,7 +137,7 @@ template <class T>
 LinkedList<T>::LinkedList(){
     //List starts empty
     size = 0;
-    first = NULL;
+    first = last = NULL;
 }
 
 template <class T>
@@ -153,7 +153,18 @@ void LinkedList<T>::Add_Head(T index){
     //Adds a new element to beginning of list
     Element<T>* e = new Element<T>(index);
     if (size) e->next = first; //Prevents crashing when list was empty
+    else last = e;
     first = e;
+    size++;
+}
+
+template <class T>
+void LinkedList<T>::Add_Tail(T index){
+    //Adds a new element to end of list
+    Element<T>* e = new Element<T>(index);
+    if (size) last->next = e;
+    else first = e;
+    last = e;
     size++;
 }
 
@@ -165,6 +176,7 @@ T LinkedList<T>::Remove_Head(){
     first = first->next;
     delete aux;
     --size;
+    if (!size) last = NULL;
     return ind;
 }
 
@@ -178,6 +190,7 @@ bool LinkedList<T>::Remove(T index){
         if (it->index == index){
             if (prev) prev->next = it->next;
             else first = it->next;
+            if (!it->next) last = prev;
             delete it;
             --size;
             return true;
@@ -448,6 +461,7 @@ void Degen_MinHeap<T>::Add(T index){
         elements[0] = e;
         heap_elements[0] = e;
         e->pos = 0;
+        e->node = 0;
         size++;
     }
     else{
@@ -457,6 +471,7 @@ void Degen_MinHeap<T>::Add(T index){
         elements[size] = e;
         heap_elements[size] = e;
         e->pos = size;
+        e->node = size;
         //Adjust parent-child pointers
         //If left is NULL, so is right, and if left is not NULL, right is
         if (heap_elements[parent]->left) heap_elements[parent]->right = e;
@@ -507,17 +522,17 @@ void Degen_MinHeap<T>::Add(T index){
 }
 
 template <class T>
-T Degen_MinHeap<T>::Remove(){
+int Degen_MinHeap<T>::Remove(){
     --size;
     //Store what should be returned before deleting element
-    T ret = heap_elements[0]->index;
+    int ret = heap_elements[0]->node;
     if (!size){
         //Heap is now empty, delete and return
         delete top;
         return ret;
     }
     //Shift last element to top of heap
-    HeapElement<T>* old_top = heap_elements[0];
+    HeapElement<T>* old_top = top;
     heap_elements[0] = heap_elements[size];
     heap_elements[size] = NULL;
     HeapElement<T>* new_top = heap_elements[0];
@@ -530,6 +545,8 @@ T Degen_MinHeap<T>::Remove(){
     new_top->parent = NULL;
     new_top->left = old_top->left;
     new_top->right = old_top->right;
+    if (old_top->left) old_top->left->parent = new_top;
+    if (old_top->right) old_top->right->parent = new_top;
     delete old_top;
     T index = new_top->index;
     HeapElement<T>* child; //Auxiliar for pointer operations
@@ -626,10 +643,12 @@ void Degen_MinHeap<T>::Edit(int index, T value){
         if (e->left) e->left->parent = dad;
         if (dad->left == e){
             //e is to the left of parent
-            dad->right->parent = e;
-            aux = e->right;
-            e->right = dad->right;
-            dad->right = aux;
+            if (dad->right){
+                dad->right->parent = e;
+                aux = e->right;
+                e->right = dad->right;
+                dad->right = aux;
+            }
             dad->left = e->left;
             e->left = dad;
         }
@@ -677,6 +696,7 @@ void Degen_MaxHeap<T>::Add(T index){
         elements[0] = e;
         heap_elements[0] = e;
         e->pos = 0;
+        e->node = 0;
         size++;
     }
     else{
@@ -685,6 +705,7 @@ void Degen_MaxHeap<T>::Add(T index){
         elements[size] = e;
         heap_elements[size] = e;
         e->pos = size;
+        e->node = size;
         if (heap_elements[parent]->left) heap_elements[parent]->right = e;
         else heap_elements[parent]->left = e;
         HeapElement<T>* aux;
@@ -728,10 +749,10 @@ void Degen_MaxHeap<T>::Add(T index){
 }
 
 template <class T>
-T Degen_MaxHeap<T>::Remove(){
+int Degen_MaxHeap<T>::Remove(){
     //Refer to minheap for comments
     --size;
-    T ret = heap_elements[0]->index;
+    int ret = heap_elements[0]->node;
     if (!size){
         delete top;
         return ret;
@@ -888,6 +909,20 @@ void ConnectedComponent::Add(int index){
 
 //-------------------------------------------------------------------------------------
 
+GraphPath::GraphPath(){
+    path = new LinkedList<int>;
+}
+
+GraphPath::~GraphPath(){
+    delete [] path;
+}
+
+void GraphPath::Add(int node){
+    path->Add_Head(node);
+}
+
+//-------------------------------------------------------------------------------------
+
 template<class T>
 Graph<T>::Graph(){
     //Default constructor sets every variable to default values
@@ -1002,7 +1037,7 @@ ConnectedComponent* Graph<T>::BFS(const int index, bool* &mark, Degen_DoubleLink
                 if (m) mark[tmp] = true;
             }
         }
-        if (t->d) delete [] neighbors;
+        delete [] neighbors;
     }
     ConnectedComponent* cc = new ConnectedComponent(count);
     ss << "bfs/bfs-" << index << "-" << fname;
@@ -1047,7 +1082,7 @@ ConnectedComponent* Graph<T>::FastBFS(const int index, Degen_DoubleLinkedList<in
                 count++;
             }
         }
-        if (t->d) delete [] neighbors;
+        delete [] neighbors;
     }
     ConnectedComponent* cc = new ConnectedComponent(count);
     for (int i = 0; i < n; ++i){
@@ -1082,7 +1117,7 @@ int Graph<T>::VeryFastBFS(const int index){
                 q.Add(tmp+1);
             }
         }
-        if (t->d) delete [] neighbors;
+        delete [] neighbors;
     }
     tmp = 0;
     for (int i = 0; i < n; ++i){
@@ -1120,7 +1155,7 @@ void Graph<T>::DFS(const int index){
                 s.Add(tmp+1);
             }
         }
-        if (t->d) delete [] neighbors;
+        delete [] neighbors;
     }
     ss << "dfs/dfs-" << index << "-" << fname;
     ss >> path;
@@ -1157,7 +1192,7 @@ void Graph<T>::VeryFastDFS(const int index){
                 s.Add(tmp+1);
             }
         }
-        if (t->d) delete [] neighbors;
+        delete [] neighbors;
     }
 }
 
@@ -1202,6 +1237,204 @@ int Graph<T>::GetDiameter(){
     return diameter;
 }
 
+template <class T>
+GraphPath* Graph<T>::Dijkstra(int node){
+    double* dist = new double[n];
+    int* parents = new int[n];
+    Degen_MinHeap<double>* heap = new Degen_MinHeap<double>(n);
+    for (int i = 0; i < n; i++){
+        dist[i] = INFINITY;
+        parents[i] = 0;
+    }
+    int n_node = node-1;
+    dist[n_node] = 0;
+    parents[n_node] = -1;
+    heap->Edit(node,0);
+    int tmp_a, top;
+    double tmp_b;
+    Tuple<int,double>* sides;
+    while (heap->size){
+        top = heap->Remove();
+        if (dist[top] == INFINITY) break;
+        sides = GetSides(top+1);
+        for (int i = 0; i < n_degree[top]; i++){
+            tmp_a = sides[i].a-1;
+            tmp_b = dist[top] + sides[i].b;
+            if (dist[tmp_a] > tmp_b){
+                dist[tmp_a] = tmp_b;
+                heap->Edit(tmp_a+1,tmp_b);
+                parents[tmp_a] = top;
+            }
+        }
+        if (t->d) delete [] sides;
+    }
+    GraphPath* paths = new GraphPath[n];
+    paths[n_node].Add(node);
+    paths[n_node].distance = 0;
+    for (int i = 0; i < n_node; i++){
+        paths[i].distance = dist[i];
+        int it = i;
+        while (it != n_node){
+            paths[i].Add(it+1);
+            it = parents[it];
+        }
+        paths[i].Add(node);
+    }
+    for (int i = n_node+1; i < n; i++){
+        paths[i].distance = dist[i];
+        int it = i;
+        while (it != n_node){
+            paths[i].Add(it+1);
+            it = parents[it];
+        }
+        paths[i].Add(node);
+    }
+    delete [] dist;
+    delete [] parents;
+    return paths;
+}
+
+template <class T>
+GraphPath* Graph<T>::Dijkstra(int src, int dst){
+    double* dist = new double[n];
+    int* parents = new int[n];
+    Degen_MinHeap<double>* heap = new Degen_MinHeap<double>(n);
+    for (int i = 0; i < n; i++){
+        dist[i] = INFINITY;
+        parents[i] = 0;
+    }
+    int n_src = src-1;
+    int n_dst = dst-1;
+    dist[n_src] = 0;
+    parents[n_src] = -1;
+    heap->Edit(src,0);
+    int tmp_a, top;
+    double tmp_b;
+    while (heap->size){
+        top = heap->Remove();
+        if (top == n_dst) break;
+        if (dist[top] == INFINITY) break;
+        Tuple<int,double>* sides = GetSides(top+1);
+        for (int i = 0; i < n_degree[top]; i++){
+            tmp_a = sides[i].a-1;
+            tmp_b = dist[top] + sides[i].b;
+            if (dist[tmp_a] > tmp_b){
+                dist[tmp_a] = tmp_b;
+                heap->Edit(tmp_a+1,tmp_b);
+                parents[tmp_a] = top;
+            }
+        }
+        if (t->d) delete [] sides;
+    }
+    GraphPath* path = new GraphPath;
+    double d = dist[n_dst];
+    path->distance = d;
+    if (d == INFINITY) path->Add(dst);
+    else {
+        int it = n_dst;
+        while (it != n_src){
+            path->Add(it+1);
+            it = parents[it];
+        }
+        path->Add(src);
+    }
+    delete [] dist;
+    delete [] parents;
+    return path;
+}
+
+template <class T>
+void Graph<T>::VeryFastDijkstra(int node, double* dist){
+    Degen_MinHeap<double>* heap = new Degen_MinHeap<double>(n);
+    for (int i = 0; i < n; i++){
+        dist[i] = INFINITY;
+    }
+    int n_node = node-1;
+    dist[n_node] = 0;
+    heap->Edit(node,0);
+    int tmp_a, top;
+    double tmp_b;
+    while (heap->size){
+        top = heap->Remove();
+        if (dist[top] == INFINITY) break;
+        Tuple<int,double>* sides = GetSides(top+1);
+        for (int i = 0; i < n_degree[top]; i++){
+            tmp_a = sides[i].a-1;
+            tmp_b = dist[top] + sides[i].b;
+            if (dist[tmp_a] > tmp_b){
+                dist[tmp_a] = tmp_b;
+                heap->Edit(tmp_a+1,tmp_b);
+            }
+        }
+        if (t->d) delete [] sides;
+    }
+}
+
+template <class T>
+void Graph<T>::MST(){
+    double* cost = new double[n];
+    bool* mark = new bool[n];
+    Tuple<int,double>* mst_sides = new Tuple<int,double>[n];
+    Degen_MinHeap<double>* heap = new Degen_MinHeap<double>(n);
+    for (int i = 0; i < n; i++){
+        cost[i] = INFINITY;
+        mark[i] = false;
+    }
+    cost[0] = 0;
+    mark[0] = true;
+    mst_sides[0] = Tuple<int,double>(0,0);
+    heap->Edit(1,0);
+    int tmp_a, top;
+    double tmp_b;
+    bool connected = true;
+    while (heap->size){
+        top = heap->Remove();
+        if (cost[top] == INFINITY) {connected = false; break;}
+        mark[top] = true;
+        Tuple<int,double>* sides = GetSides(top+1);
+        for (int i = 0; i < n_degree[top]; i++){
+            tmp_a = sides[i].a-1;
+            if (mark[tmp_a]) continue;
+            tmp_b = sides[i].b;
+            if (cost[tmp_a] > tmp_b){
+                cost[tmp_a] = tmp_b;
+                mst_sides[tmp_a] = Tuple<int,double>(top+1,tmp_b);
+                heap->Edit(tmp_a+1,tmp_b);
+            }
+        }
+        if (t->d) delete [] sides;
+    }
+    ofstream o;
+    string path = "mst-"+fname; //E.g.: "mst-graph.txt"
+    o.open(path.c_str());
+    if (!connected) o << "WARNING - Graph is not connected and this result may be wrong" << "\n";
+    o << n << "\n";
+    double sum = 0;
+    for (int i = 1; i < n; i++){
+        o << i+1 << " " << mst_sides[i].a << " " << mst_sides[i].b << "\n";
+        sum += mst_sides[i].b;
+    }
+    o << "CUSTO TOTAL: " << sum << endl;
+    o.close();
+    delete [] cost;
+    delete [] mark;
+    delete [] mst_sides;
+}
+
+template <class T>
+double Graph<T>::AverageDistance(){
+    double sum = 0;
+    double* dist = new double[n];
+    for (int i = 0; i < n; i++){
+        VeryFastDijkstra(i+1,dist);
+        for (int j = 0; j < n; j++){
+            if (dist[j] != INFINITY) sum += dist[j];
+        }
+    }
+    sum /= n;
+    sum /= (n-1);
+    return sum;
+}
 
 template class Graph<NVector>;
 template class Graph<Matrix>;

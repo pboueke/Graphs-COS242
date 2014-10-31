@@ -228,20 +228,14 @@
 *Data structure to represent path between two nodes in a graph
 *Contains an integer to store distance, starts as infinity
 *Contains a linked list of nodes that make the path
-*Methods are: Add, Change, Operator < + default ones
+*Methods are: Add, Operator X + default ones
 
 1.14.1)Add
 
 *Adds a node to the path, appends node to head of list
 *Increments path on side's weight
 
-1.14.2)Change
-
-*Changes a path to a specified one, iterates the entire path
-
-1.14.3)Operator <
-
-*Compares distance of two paths
+1.14.2)Operator X
 
 *************************************************************************************
 

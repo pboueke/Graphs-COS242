@@ -41,6 +41,7 @@ struct HeapElement{
     //Element for a binary heap
     T index; //Element's key
     int pos;
+    int node;
     HeapElement<T>* parent; //Pointer to parent, root has NULL
     HeapElement<T>* left; //Pointer to left child, may be NULL
     HeapElement<T>* right; //Pointer to right child, may be NULL
@@ -78,10 +79,12 @@ struct LinkedList{
     //Data structure representing a linked list
     int size; //List's size
     Element<T>* first; //Pointer to first element
+    Element<T>* last; //Pointer to last element
 
     LinkedList(); //Default constructor
     ~LinkedList(); //Default destructor
     void Add_Head(T index); //Adds element to list's head
+    void Add_Tail(T index);
     T Remove_Head(); //Removes first element
     bool Remove(T index); //Removes specific element, returns false if not in list
 };
@@ -147,7 +150,7 @@ struct Degen_MinHeap{
     Degen_MinHeap(int n_size); //Default constructor, requires a fixed max size
     ~Degen_MinHeap(); //Default destructor
     void Add(T index); //Adds element to heap, should only be called from constructor
-    T Remove(); //Removes top of heap
+    int Remove(); //Removes top of heap
     void Edit(int index, T value); //Changes a specific key
 };
 
@@ -162,7 +165,7 @@ struct Degen_MaxHeap{
     Degen_MaxHeap(int n_size); //Default constructor, requires a fixed max size
     ~Degen_MaxHeap(); //Default destructor
     void Add(T index); //Adds element to heap, should only be called from constructor
-    T Remove(); //Remvoes top of heap
+    int Remove(); //Remvoes top of heap
     void Edit(int index, T value); //Changes a specific key
 };
 
@@ -179,6 +182,16 @@ struct ConnectedComponent{
     void Add(int index); //Adds node to connected component
 };
 
+struct GraphPath{
+    //Data structure for storing paths in a graph
+    double distance;
+    LinkedList<int>* path;
+
+    GraphPath();
+    ~GraphPath();
+    void Add(int node);
+};
+
 template <class T>
 class Graph{
     //Represents a generic graph, with auxiliar data structure T, set by the user
@@ -192,9 +205,18 @@ class Graph{
     int* degree_dist; //Degree distribution, degree_dist[0] contains no. of vertices with degree 0
     int* n_degree; //Array for storing each node's degree
     T* t; //Data structure for storing vertices and edges
-    ConnectedComponent* FastBFS(const int index, Degen_DoubleLinkedList<int>* ll); //Private BFS for ConnectedComponents algorithm
-    int VeryFastBFS(const int index); //Private BFS for Diameter algorithm
-    void VeryFastDFS(const int index); //Private DFS for reasons
+
+    ConnectedComponent* FastBFS(const int index, Degen_DoubleLinkedList<int>* ll);
+    //Private BFS for ConnectedComponents algorithm
+
+    int VeryFastBFS(const int index);
+    //Private BFS for Diameter algorithm
+
+    void VeryFastDFS(const int index);
+    //Private DFS for reasons
+
+    void VeryFastDijkstra(int node, double* dist);
+    //Private Dijkstra for Average Distance Algorithm
 
 public:
     Graph(); //Default constructor
@@ -237,6 +259,14 @@ public:
     int GetDiameter();
     //Runs a BFS on every node, returning the deepest level found among all BFS's.
     //Complexity is O(n^2)
+
+    GraphPath* Dijkstra(int node);
+
+    GraphPath* Dijkstra(int src, int dst);
+
+    void MST();
+
+    double AverageDistance();
 };
 
 #endif // GRAPH_H

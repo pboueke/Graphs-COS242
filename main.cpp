@@ -8,7 +8,7 @@
 #include <sstream>
 
 #define INDEX 1
-#define FNAME "graphZ.txt"
+#define FNAME "grafo_master.txt"
 #define SIZE 10
 
 using namespace std;
@@ -36,6 +36,15 @@ int main(){
     /*(Un)comment the lines you (don't) wish to test!! (Vector - Weights)*/
     Graph <NVector> gvw;
     gvw.LoadGraphFromFile(FNAME,true);
+    cout << "DONE - Load" << endl;
+    gvw.Dijkstra(INDEX);
+    cout << "DONE - Dijkstra" << endl;
+    gvw.Dijkstra(INDEX,INDEX+30);
+    cout << "DONE - Dst Dijkstra" << endl;
+    gvw.MST();
+    cout << "DONE - MST" << endl;
+    gvw.AverageDistance();
+    cout << "DONE" << endl;
 
     /*(Un)comment the lines you (don't) wish to test!! (Matrix - No Weights)*/
     //Graph<Matrix> gm; //Instantiates a graph with a vector
@@ -54,6 +63,15 @@ int main(){
     //gm.DFS(INDEX); //Runs a DFS on a specific node
     //gm.GetConnectedComponents(); //Prints all connected components to a file
     //int diameter_m = gm.GetDiameter(); //Gets diameter
+    //cout << "DONE" << endl;
+
+    /*(Un)comment the lines you (don't) wish to test!! (Matrix - Weights)*/
+    //Graph <NVector> gmw;
+    //gmw.LoadGraphFromFile(FNAME,true);
+    //gmw.Dijkstra(2);
+    //gmw.Dijkstra(2,10);
+    //gmw.MST();
+    //gmw.AverageDistance();
     //cout << "DONE" << endl;
 
     return 0;
