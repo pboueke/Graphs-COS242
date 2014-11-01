@@ -1443,4 +1443,5 @@ template class Graph<Matrix>;
 template class Ordered_LinkedList<int>;
 template class Degen_DoubleLinkedList<int>;
 template class Tuple<int,double>;
+template class LinkedList<int>;
 //http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor
