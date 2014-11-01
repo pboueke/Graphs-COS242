@@ -1368,6 +1368,7 @@ void Graph<T>::VeryFastDijkstra(int node, double* dist){
         }
         if (t->d) delete [] sides;
     }
+    delete heap;
 }
 
 template <class T>
