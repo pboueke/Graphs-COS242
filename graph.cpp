@@ -1424,15 +1424,17 @@ void Graph<T>::MST(){
 template <class T>
 double Graph<T>::AverageDistance(){
     double sum = 0;
+    int count = 0;
+    double n_n = n;
     double* dist = new double[n];
     for (int i = 0; i < n; i++){
         VeryFastDijkstra(i+1,dist);
         for (int j = 0; j < n; j++){
             if (dist[j] != INFINITY) sum += dist[j];
+            else count++;
         }
     }
-    sum /= n;
-    sum /= (n-1);
+    sum /= ((n_n*(n_n-1))-count);
     return sum;
 }
 

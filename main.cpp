@@ -8,8 +8,8 @@
 #include <sstream>
 
 #define INDEX 1
-#define FNAME "grafo_master.txt"
-#define SIZE 10
+#define FNAME ""
+#define SIZE 0
 
 using namespace std;
 
@@ -34,17 +34,13 @@ int main(){
     //cout << "DONE" << endl;
 
     /*(Un)comment the lines you (don't) wish to test!! (Vector - Weights)*/
-    Graph <NVector> gvw;
-    gvw.LoadGraphFromFile(FNAME,true);
-    cout << "DONE - Load" << endl;
-    gvw.Dijkstra(INDEX);
-    cout << "DONE - Dijkstra" << endl;
-    gvw.Dijkstra(INDEX,INDEX+30);
-    cout << "DONE - Dst Dijkstra" << endl;
-    gvw.MST();
-    cout << "DONE - MST" << endl;
-    gvw.AverageDistance();
-    cout << "DONE" << endl;
+    //Graph <NVector> gvw;
+    //gvw.LoadGraphFromFile(FNAME,true);
+    //gvw.Dijkstra(INDEX);
+    //gvw.Dijkstra(INDEX,INDEX+30);
+    //gvw.MST();
+    //gvw.AverageDistance();
+    //cout << "DONE" << endl;
 
     /*(Un)comment the lines you (don't) wish to test!! (Matrix - No Weights)*/
     //Graph<Matrix> gm; //Instantiates a graph with a vector
