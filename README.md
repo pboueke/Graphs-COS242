@@ -5,20 +5,21 @@ It contains a few usefull graph related methods and many useful data structures.
 
 1)Data Structures:
 
--Tuple
--Element
--DoubleElement
--HeapElement
--Queue
--Stack
--Linked List
--Ordered Linked List
--Double Linked List
--Degenerate Double Linked List with Vector
--Degenerate MinHeap
--Degenerate MaxHeap (new)
--ConnectedComponent
--GraphPath (new)
+* Tuple
+* Element
+* DoubleElement
+* HeapElement
+* Queue
+* Stack
+* Linked List
+* Ordered Linked List
+* Double Linked List
+* Degenerate Double Linked List with Vector
+* Degenerate MinHeap
+* Degenerate MaxHeap (new)
+* ConnectedComponent
+* GraphPath (new)
+
 -------------------------------------------------------------------------------------
 
 1.1)Tuple
