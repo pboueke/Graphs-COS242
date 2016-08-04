@@ -242,9 +242,9 @@ It contains a few usefull graph related methods and many useful data structures.
 
 2)Classes:
 
--NVector
--Matrix
--Graph (updated)
+* NVector
+* Matrix
+* Graph (updated)
 
 -------------------------------------------------------------------------------------
 
